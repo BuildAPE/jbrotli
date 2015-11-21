@@ -28,9 +28,9 @@ It was developed by Google and released in September 2015 via this blog post:
 ### Build native libs
 
 ```bash
- mkdir build
- cd build
- cmake ..
+mkdir build
+cd build
+cmake ..
 ```
 
 ### Prepare JNI Header
@@ -38,7 +38,7 @@ It was developed by Google and released in September 2015 via this blog post:
 This is only needed when native method signatures change.
 
 ```bash
- mvn compile
- javah -v -d src/main/cpp -classpath target/classes de.bitkings.jbrotli.BrotliCompressor
+mvn compile
+javah -v -d src/main/cpp -classpath target/classes de.bitkings.jbrotli.BrotliCompressor
 ```
 
