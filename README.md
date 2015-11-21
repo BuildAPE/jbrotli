@@ -20,15 +20,25 @@ It was developed by Google and released in September 2015 via this blog post:
 * Java JDK 8
 * C++ compiler tool chain
    * depends on platform
-   * currently tested with MS Visual Studio 2010
+   * currently tested with
+      * MS Visual Studio 2010 (on Windows 10, 64bit)
+      * NMake (on Windows 10, 64bit)
 * [CMake v3.0+](https://cmake.org/)
+
+### Build native libs
+
+```bash
+ mkdir build
+ cd build
+ cmake ..
+```
 
 ### Prepare JNI Header
 
 This is only needed when native method signatures change.
 
-```
-$> mvn compile
-$> javah -v -d src/main/cpp -classpath target/classes de.bitkings.jbrotli.BrotliCompressor
+```bash
+ mvn compile
+ javah -v -d src/main/cpp -classpath target/classes de.bitkings.jbrotli.BrotliCompressor
 ```
 
