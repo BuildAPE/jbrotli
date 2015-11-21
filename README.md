@@ -13,6 +13,17 @@ It is similar in speed with deflate but offers more dense compression.
 It was developed by Google and released in September 2015 via this blog post:
 [Introducing Brotli: a new compression algorithm for the internet](http://google-opensource.blogspot.de/2015/09/introducing-brotli-new-compression.html)
 
+## Example compression code snippet
+
+```Java
+System.loadLibrary("brotli");
+
+byte[] inBuf = "Brotli: a new compression algorithm for the internet. Now available for Java!".getBytes();
+byte[] compressedBuf = new byte[2048];
+BrotliCompressor compressor = new BrotliCompressor();
+int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuf, compressedBuf);
+```
+
 ## Building this library
 
 ### Requirements
