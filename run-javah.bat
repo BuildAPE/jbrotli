@@ -1,0 +1,1 @@
+javah -v -d src\main\cpp -classpath target\classes de.bitkings.jbrotli.BrotliCompressor
