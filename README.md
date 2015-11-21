@@ -33,7 +33,7 @@ cd build
 cmake ..
 ```
 
-### Prepare JNI Header
+### Prepare JNI header files
 
 This is only needed when native method signatures change.
 
