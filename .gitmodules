@@ -2,3 +2,4 @@
 	path = brotli
 	url = https://github.com/google/brotli.git
 	branch = master
+	tag = v0.2.0
