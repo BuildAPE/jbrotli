@@ -18,10 +18,10 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes
 /*
  * Class:     de_bitkings_jbrotli_BrotliCompressor
  * Method:    compressByteBuffer
- * Signature: (Lde/bitkings/jbrotli/Brotli/Parameter;JIIJ)I
+ * Signature: (Lde/bitkings/jbrotli/Brotli/Parameter;Ljava/nio/ByteBuffer;IILjava/nio/ByteBuffer;)I
  */
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressByteBuffer
-  (JNIEnv *, jclass, jobject, jlong, jint, jint, jlong);
+  (JNIEnv *, jclass, jobject, jobject, jint, jint, jobject);
 
 #ifdef __cplusplus
 }

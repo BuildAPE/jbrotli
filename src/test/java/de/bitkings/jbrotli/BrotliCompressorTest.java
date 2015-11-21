@@ -38,10 +38,12 @@ public class BrotliCompressorTest {
     ByteBuffer aDirectBuffer = ByteBuffer.allocateDirect(A_BUFFER.length);
     aDirectBuffer.put(A_BUFFER);
     aDirectBuffer.position(0);
-    byte[] out = new byte[2048];
-    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, aDirectBuffer, ByteBuffer.wrap(out));
+    ByteBuffer outBuffer = ByteBuffer.allocateDirect(10);
+    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, aDirectBuffer, outBuffer);
 
     assertThat(outLength).isEqualTo(10);
-    assertThat(out).startsWith(new byte[]{27, 54, 0, 0, 36, -126, -30, -103, 64, 0});
+    byte[] buf = new byte[10];
+    outBuffer.get(buf);
+    assertThat(buf).startsWith(new byte[]{27, 54, 0, 0, 36, -126, -30, -103, 64, 0});
   }
 }

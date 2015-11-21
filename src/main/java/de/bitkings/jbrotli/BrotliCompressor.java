@@ -1,7 +1,5 @@
 package de.bitkings.jbrotli;
 
-import sun.nio.ch.DirectBuffer;
-
 import java.nio.ByteBuffer;
 
 public final class BrotliCompressor {
@@ -13,6 +11,7 @@ public final class BrotliCompressor {
   public final int compress(Brotli.Parameter parameter, byte[] in, int inPosition, int inLength, byte[] out) {
     return compressBytes(parameter, in, inPosition, inLength, out);
   }
+
   public final int compress(Brotli.Parameter parameter, ByteBuffer in, ByteBuffer out) {
     return compress(parameter, in, 0, in.limit(), out);
   }
@@ -25,10 +24,11 @@ public final class BrotliCompressor {
     int outLength;
     if (rem <= 0)
       return -1;
-    if (in instanceof DirectBuffer) {
-      outLength = compressByteBuffer(parameter, ((DirectBuffer) in).address(), in.position(), inLength, ((DirectBuffer) out).address());
-    } else if (in.hasArray()) {
+    if (in.isDirect() && out.isDirect()) {
+      outLength = compressByteBuffer(parameter, in, in.position(), inLength, out);
+    } else if (in.hasArray() && out.hasArray()) {
       outLength = compressBytes(parameter, in.array(), pos + in.arrayOffset(), rem, out.array());
+      out.limit(pos + outLength);
     } else {
       byte[] b = new byte[rem];
       in.get(b);
@@ -40,6 +40,6 @@ public final class BrotliCompressor {
 
   private native static int compressBytes(Brotli.Parameter parameter, byte[] in, int inPosition, int inLength, byte[] out);
 
-  private native static int compressByteBuffer(Brotli.Parameter parameter, long inAddr, int inPosition, int inLength, long outAddr);
+  private native static int compressByteBuffer(Brotli.Parameter parameter, ByteBuffer inBuf, int inPosition, int inLength, ByteBuffer outBuf);
 
 }

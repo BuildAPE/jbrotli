@@ -41,12 +41,6 @@
 #include "../../../brotli/enc/encode.h"
 
 
-#ifdef _WIN64
-#define jlong2ptr(x) ((void*)(x))
-#else
-#define jlong2ptr(x) ((void*)(int)(x))
-#endif
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,7 +54,7 @@ extern "C" {
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(JNIEnv* env, jclass thisObj, jobject brotliParams, jbyteArray inBuf, jint inPos, jint inLen, jbyteArray outBuf) {
   size_t output_length;
   brotli::BrotliParams params;
-  
+
   uint8_t *inBufCritArray = (uint8_t*)env->GetPrimitiveArrayCritical(inBuf, 0);
   uint8_t *outBufCritArray = (uint8_t*)env->GetPrimitiveArrayCritical(outBuf, 0);
   int ok = brotli::BrotliCompressBuffer(params, inLen, inBufCritArray, &output_length, outBufCritArray);
@@ -75,18 +69,23 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
 /*
  * Class:     de_bitkings_jbrotli_BrotliCompressor
  * Method:    compressByteBuffer
- * Signature: (Lde/bitkings/jbrotli/Brotli/Parameter;JIIJ)I
+ * Signature: (Lde/bitkings/jbrotli/Brotli/Parameter;Ljava/nio/ByteBuffer;IILjava/nio/ByteBuffer;)I
  */
-JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressByteBuffer(JNIEnv* env, jclass thisObj, jobject brotliParams, jlong inBufLong, jint inPos, jint inLen, jlong outBufLong) {
+JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressByteBuffer(JNIEnv* env, jclass thisObj, jobject brotliParams, jobject inBuf, jint inPos, jint inLen, jobject outBuf) {
   size_t output_length;
   brotli::BrotliParams params;
-  
-  uint8_t *inBufPtr = (uint8_t *)jlong2ptr(inBufLong);
-  uint8_t *outBufPtr = (uint8_t *)jlong2ptr(outBufLong);
+
+  uint8_t *inBufPtr = (uint8_t *)env->GetDirectBufferAddress(inBuf);
+  if (inBufPtr==NULL) return -1;
+
+  uint8_t *outBufPtr = (uint8_t *)env->GetDirectBufferAddress(outBuf);
+  if (outBufPtr==NULL) return -1;
+
   int ok = brotli::BrotliCompressBuffer(params, inLen, inBufPtr, &output_length, outBufPtr);
   if (!ok) {
     return -1;
   }
+
   return output_length;
 }
 
