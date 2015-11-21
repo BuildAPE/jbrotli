@@ -2,7 +2,7 @@
 jbrotli
 =========================================
 
-Java binding for [Brotli](https://github.com/google/brotli.git) compression algorithm.
+Java bindings for [Brotli](https://github.com/google/brotli.git): a new compression algorithm for the internet
 
 ## About Brotli
 
