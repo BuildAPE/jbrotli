@@ -36,14 +36,21 @@ int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuf, compressedB
 
 * Java JDK 8
 * C++ compiler tool chain
-   * depends on platform
-   * successful tested with
-      * MS Visual Studio 2010 (on Windows 10, 64bit)
-      * NMake (on Windows 10, 64bit)
-      * Xcode (on OSX El Capitan 10.11.1)
-   * not working with (currently)
-      * minggw 64bit doesn't work
 * [CMake v3.0+](https://cmake.org/)
+
+
+#### Supported platforms and architecture
+
+As this project is under development, currently the following platforms and architectures are supported
+
+* Windows 10, 64bit
+   * compiler tool chains
+      * [ok] NMake 32bit+64bit
+      * [most likely] MS Visual Studio 2010 32bit+64bit
+      * [fail] mingw 64bit
+* OSX El Capitan v10.11.1
+   * compiler tool chains:
+      * [ok] Xcode
 
 
 ### Build native libs
