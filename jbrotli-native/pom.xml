@@ -15,6 +15,11 @@
 
   <profiles>
 
+    <!--
+    Using the os/arch names as Java Native Access (jna) lib does - so to choose as module names.
+    See also: https://github.com/java-native-access/jna
+    -->
+
     <profile>
       <id>win32-x86</id>
       <activation>
