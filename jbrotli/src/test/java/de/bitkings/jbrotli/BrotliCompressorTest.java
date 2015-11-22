@@ -15,7 +15,7 @@ public class BrotliCompressorTest {
   private BrotliCompressor compressor;
 
   @BeforeClass
-  public void beforeClass() throws Exception {
+  public void loadLibrary() throws Exception {
     System.loadLibrary("brotli");
   }
 

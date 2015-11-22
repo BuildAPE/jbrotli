@@ -15,7 +15,7 @@ public class BrotliExampleTest {
 
     System.loadLibrary("brotli");
 
-    byte[] inBuf = "Brotli: a new compression algorithm for the internet. Now available for Java!".getBytes();
+    byte[] inBuf = "Brotli: a new compression algorithm for the internet. Now available for Java!".getBytes("ASCII");
     byte[] compressedBuf = new byte[2048];
     BrotliCompressor compressor = new BrotliCompressor();
     int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuf, compressedBuf);

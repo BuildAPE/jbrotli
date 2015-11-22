@@ -56,10 +56,17 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
   brotli::BrotliParams params;
 
   uint8_t *inBufCritArray = (uint8_t*)env->GetPrimitiveArrayCritical(inBuf, 0);
+  if (inBufCritArray == NULL || env->ExceptionCheck()) return -1; 
   uint8_t *outBufCritArray = (uint8_t*)env->GetPrimitiveArrayCritical(outBuf, 0);
+  if (outBufCritArray == NULL || env->ExceptionCheck()) return -1;
+  
   int ok = brotli::BrotliCompressBuffer(params, inLen, inBufCritArray, &output_length, outBufCritArray);
-  env->ReleasePrimitiveArrayCritical(inBuf, inBufCritArray, 0);
+  
   env->ReleasePrimitiveArrayCritical(outBuf, outBufCritArray, 0);
+  if (env->ExceptionCheck()) return -1;
+  env->ReleasePrimitiveArrayCritical(inBuf, inBufCritArray, 0);
+  if (env->ExceptionCheck()) return -1;
+  
   if (!ok) {
     return -1;
   }

@@ -33,7 +33,7 @@ add_library (brotli ${LIB_TYPE} "brotli/enc/backward_references.cc"
 				"brotli/dec/huffman.c"
 				"brotli/dec/streams.c"
 				"brotli/dec/state.c"
-				"src/main/cpp/de_bitkings_jbrotli_BrotliCompressor.cxx")
+				"jbrotli-native/src/main/cpp/de_bitkings_jbrotli_BrotliCompressor.cxx")
 
 SET_TARGET_PROPERTIES(brotli PROPERTIES LINKER_LANGUAGE CXX)
 
@@ -42,10 +42,10 @@ SET_TARGET_PROPERTIES(brotli PROPERTIES LINKER_LANGUAGE CXX)
 
 set(CMAKE_JNI_TARGET TRUE)
 
-SET(CMAKE_CXX_FLAGS "-std=c++11 -Wall")
+SET(CMAKE_CXX_FLAGS "-std=c++11 -Wall -O3")
 
 if(WIN32)
-	SET(STATIC_LIBRARY_CXX_FLAGS  /MDd)
+	SET(STATIC_LIBRARY_CXX_FLAGS /MDd)
 	add_compile_options(/EHsc)
 else(WIN32)
 	SET(STATIC_LIBRARY_CXX_FLAGS)
