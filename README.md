@@ -34,9 +34,9 @@ int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuf, compressedB
 
 ### Requirements
 
-* Java JDK 8
-* C++ compiler tool chain
+* [Java JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [CMake v3.0+](https://cmake.org/)
+* C++ compiler tool chain (see below)
 
 
 #### Supported platforms and architecture
