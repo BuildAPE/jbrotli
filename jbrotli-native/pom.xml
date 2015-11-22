@@ -54,6 +54,18 @@
       </modules>
     </profile>
 
+    <profile>
+      <id>darwin</id>
+      <activation>
+        <os>
+          <family>mac</family>
+        </os>
+      </activation>
+      <modules>
+        <module>darwin</module>
+      </modules>
+    </profile>
+
   </profiles>
 
 </project>
