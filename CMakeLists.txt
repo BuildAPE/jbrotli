@@ -33,7 +33,8 @@ add_library (brotli ${LIB_TYPE} "brotli/enc/backward_references.cc"
 				"brotli/dec/huffman.c"
 				"brotli/dec/streams.c"
 				"brotli/dec/state.c"
-				"jbrotli-native/src/main/cpp/de_bitkings_jbrotli_BrotliCompressor.cxx")
+				"jbrotli-native/src/main/cpp/de_bitkings_jbrotli_BrotliCompressor.cxx"
+				"jbrotli-native/src/main/cpp/de_bitkings_jbrotli_BrotliDeCompressor.cxx")
 
 SET_TARGET_PROPERTIES(brotli PROPERTIES LINKER_LANGUAGE CXX)
 
