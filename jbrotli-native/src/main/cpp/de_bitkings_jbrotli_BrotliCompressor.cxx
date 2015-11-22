@@ -38,7 +38,7 @@
 #include <string.h>
 
 #include "de_bitkings_jbrotli_BrotliCompressor.h"
-#include "../../../brotli/enc/encode.h"
+#include "../../../../brotli/enc/encode.h"
 
 
 

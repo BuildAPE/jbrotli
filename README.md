@@ -1,8 +1,14 @@
 
-jbrotli
+jBrotli
 =========================================
 
+## About jBrotli
+
 Java bindings for [Brotli](https://github.com/google/brotli.git): a new compression algorithm for the internet
+
+##### License
+
+[![License](https://img.shields.io/:license-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 ## About Brotli
 
