@@ -14,15 +14,15 @@ REM
 cd %~dp0
 
 :PREPARE_FOLDERS
-mkdir build
+mkdir target
 mkdir target\classes
 
 :PREPARE_MAKEFILES
-cd %~dp0build
+cd %~dp0target
 cmake -G "NMake Makefiles" ..\..\..\
 
 :MAKE_ALL
-cd %~dp0build
+cd %~dp0target
 nmake
 
 :COPY_DLL_FOR_MAVEN_PACKAGING

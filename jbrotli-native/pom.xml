@@ -8,6 +8,7 @@
     <groupId>de.bitkings.jbrotli</groupId>
     <artifactId>jbrotli-parent</artifactId>
     <version>0.2.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>jbrotli-native</artifactId>
@@ -72,6 +73,22 @@
     </profile>
 
   </profiles>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <!-- Configure java.library.path to enable unit tests load the native libs -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <forkMode>once</forkMode>
+            <argLine>-Djava.library.path=${project.basedir}/target/classes</argLine>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
   <licenses>
     <license>
