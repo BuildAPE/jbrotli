@@ -11,22 +11,29 @@ REM  o  nmake installed (comes e.g. with Visual Studio), call "vcvarsall.bat x64
 REM
 
 :ENSURE_WORKING_DIRECTORY
-cd %~dp0
+cd "%~dp0"
 
 :PREPARE_FOLDERS
-mkdir target
-mkdir target\classes
+if not exist "%~dp0target" mkdir "%~dp0target"
+if not exist "%~dp0target\classes" mkdir "%~dp0target\classes"
+SET TARGET_CLASSES_PATH=%~dp0target\classes
 
 :PREPARE_MAKEFILES
-cd %~dp0target
-cmake -G "NMake Makefiles" ..\..\..\
+cd "%~dp0target"
+cmake -G "NMake Makefiles" ..\..\..\ || goto ERROR
 
 :MAKE_ALL
-cd %~dp0target
-nmake
+cd "%~dp0target"
+nmake || goto ERROR
 
 :COPY_DLL_FOR_MAVEN_PACKAGING
-copy /Y brotli.dll ..\target\classes\
+copy /Y "%~dp0target\brotli.dll" "%TARGET_CLASSES_PATH%" || goto ERROR 
 
 :ENSURE_WORKING_DIRECTORY
 cd %~dp0
+goto :EOF
+
+:ERROR
+cd %~dp0
+echo "*** An error occured. Please check log messages. ***"
+exit /b -1
