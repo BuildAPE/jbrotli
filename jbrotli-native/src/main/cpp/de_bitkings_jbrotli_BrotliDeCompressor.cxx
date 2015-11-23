@@ -51,27 +51,26 @@ extern "C" {
  * Method:    deCompressBytes
  * Signature: ([BII[B)I
  */
-JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressBytes(JNIEnv *env, jclass thisObj, jbyteArray inBuf, jint inPos, jint inLen, jbyteArray outBuf) {
-  // size_t output_length;
-  // brotli::BrotliParams params;
+JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressBytes(JNIEnv *env, jclass thisObj, jbyteArray encodedByteArray, jint inPos, jint inLen, jbyteArray outByteArray) {
+  size_t output_length;
 
-  // uint8_t *inBufCritArray = (uint8_t*)env->GetPrimitiveArrayCritical(inBuf, 0);
-  // if (inBufCritArray == NULL || env->ExceptionCheck()) return -1; 
-  // uint8_t *outBufCritArray = (uint8_t*)env->GetPrimitiveArrayCritical(outBuf, 0);
-  // if (outBufCritArray == NULL || env->ExceptionCheck()) return -1;
+  uint8_t *encodedBuffer = (uint8_t*)env->GetPrimitiveArrayCritical(encodedByteArray, 0);
+  if (encodedBuffer == NULL || env->ExceptionCheck()) return -1; 
+  uint8_t *outBuffer = (uint8_t*)env->GetPrimitiveArrayCritical(outByteArray, 0);
+  if (outBuffer == NULL || env->ExceptionCheck()) return -1;
   
-  // int ok = brotli::BrotliCompressBuffer(params, inLen, inBufCritArray, &output_length, outBufCritArray);
+  BrotliResult brotliResult = BrotliDecompressBuffer(inLen, encodedBuffer, &output_length, outBuffer);
   
-  // env->ReleasePrimitiveArrayCritical(outBuf, outBufCritArray, 0);
-  // if (env->ExceptionCheck()) return -1;
-  // env->ReleasePrimitiveArrayCritical(inBuf, inBufCritArray, 0);
-  // if (env->ExceptionCheck()) return -1;
+  if (brotliResult == BROTLI_RESULT_ERROR) return -10;
+  // if (brotliResult == BROTLI_RESULT_NEEDS_MORE_INPUT) return -12;
+  // if (brotliResult == BROTLI_RESULT_NEEDS_MORE_OUTPUT) return -13;
   
-  // if (!ok) {
-  //   return -1;
-  // }
-  // return output_length;
-  return -1;
+  env->ReleasePrimitiveArrayCritical(outByteArray, outBuffer, 0);
+  if (env->ExceptionCheck()) return -1;
+  env->ReleasePrimitiveArrayCritical(encodedByteArray, encodedBuffer, 0);
+  if (env->ExceptionCheck()) return -1;
+  
+  return output_length;
 }
 
 /*
