@@ -9,6 +9,9 @@
 
   <packaging>pom</packaging>
 
+  <description>Java bindings for Brotli: a new compression algorithm for the internet.</description>
+  <url>https://github.com/nitram509/jbrotli</url>
+
   <modules>
     <module>jbrotli</module>
     <module>jbrotli-native</module>
@@ -100,6 +103,13 @@
     </profile>
   </profiles>
 
+  <scm>
+    <url>scm:git:git@github.com:nitram509/jbrotli.git</url>
+    <connection>scm:git:git@github.com:nitram509/jbrotli.git</connection>
+    <developerConnection>scm:git:git@github.com:nitram509/jbrotli.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
   <distributionManagement>
     <repository>
       <id>bintray-nitram509-jbrotli-snapshots</id>
@@ -115,5 +125,13 @@
       <comments>A business-friendly OSS license</comments>
     </license>
   </licenses>
+
+  <developers>
+    <developer>
+      <name>Martin W. Kirst</name>
+      <email>maki@bitkings.de</email>
+      <url>https://github.com/nitram509</url>
+    </developer>
+  </developers>
 
 </project>
