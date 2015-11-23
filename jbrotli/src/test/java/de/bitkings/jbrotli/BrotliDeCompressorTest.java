@@ -28,7 +28,7 @@ public class BrotliDeCompressorTest {
 
     int outLen = decompressor.deCompress(in, out);
 
-    assertThat(outLen).isGreaterThan(A_BUFFER.length);
+    assertThat(outLen).isEqualTo(A_BUFFER.length);
     assertThat(out).startsWith(A_BUFFER);
   }
 }
