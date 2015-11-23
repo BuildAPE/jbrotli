@@ -62,8 +62,8 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
   BrotliResult brotliResult = BrotliDecompressBuffer(inLen, encodedBuffer, &output_length, outBuffer);
   
   if (brotliResult == BROTLI_RESULT_ERROR) return -10;
-  // if (brotliResult == BROTLI_RESULT_NEEDS_MORE_INPUT) return -12;
-  // if (brotliResult == BROTLI_RESULT_NEEDS_MORE_OUTPUT) return -13;
+  if (brotliResult == BROTLI_RESULT_NEEDS_MORE_INPUT) return -12;
+  if (brotliResult == BROTLI_RESULT_NEEDS_MORE_OUTPUT) return -13;
   
   env->ReleasePrimitiveArrayCritical(outByteArray, outBuffer, 0);
   if (env->ExceptionCheck()) return -1;
