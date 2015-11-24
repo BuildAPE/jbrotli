@@ -23,7 +23,7 @@ public final class BrotliCompressor {
     int rem = limit - pos;
     int outLength;
     if (rem <= 0)
-      return -1;
+      return -30;
     if (in.isDirect() && out.isDirect()) {
       outLength = compressByteBuffer(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in, in.position(), inLength, out);
     } else if (in.hasArray() && out.hasArray()) {

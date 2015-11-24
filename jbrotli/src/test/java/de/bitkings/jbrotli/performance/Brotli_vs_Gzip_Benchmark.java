@@ -14,6 +14,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.zip.GZIPOutputStream;
 
 @State(Scope.Benchmark)
@@ -25,14 +26,19 @@ public class Brotli_vs_Gzip_Benchmark {
   private byte[] out;
   private ByteArrayOutputStream arrayOutputStream;
   private Brotli.Parameter brotliParameter;
+  private ByteBuffer outByteBuffer;
+  private ByteBuffer cpHtmlDataByteBuffer;
 
   @Setup
   public void init() throws IOException {
     System.loadLibrary("brotli");
     brotliCompressor = new BrotliCompressor();
     out = new byte[24603];
+    outByteBuffer = ByteBuffer.allocateDirect(24603);
     arrayOutputStream = new ByteArrayOutputStream(24603);
     cpHtmlData = loadCanterburyCorpusHtmlFile();
+    cpHtmlDataByteBuffer = ByteBuffer.allocateDirect(cpHtmlData.length);
+    cpHtmlDataByteBuffer.put(cpHtmlData);
     brotliParameter = new Brotli.Parameter(Brotli.Mode.GENERIC, 5, Brotli.DEFAULT_PARAMETER_LGWIN, Brotli.DEFAULT_PARAMETER_LGBLOCK);
   }
 
@@ -44,8 +50,16 @@ public class Brotli_vs_Gzip_Benchmark {
   }
 
   @Benchmark
-  public void brotli_compression() {
-    brotliCompressor.compress(brotliParameter, cpHtmlData, 0, cpHtmlData.length, out);
+  public void brotli_compression_with_byte_array() {
+    int compress = brotliCompressor.compress(brotliParameter, cpHtmlData, 0, cpHtmlData.length, out);
+    if (!(compress > 0)) throw new AssertionError("epic fail");
+  }
+
+  @Benchmark
+  public void brotli_compression_with_ByteBuffer() {
+    cpHtmlDataByteBuffer.position(0);
+    int compress = brotliCompressor.compress(brotliParameter, cpHtmlDataByteBuffer, 0, 24603, outByteBuffer);
+    if (!(compress > 0)) throw new AssertionError("epic fail, err: " + compress);
   }
 
   @Benchmark

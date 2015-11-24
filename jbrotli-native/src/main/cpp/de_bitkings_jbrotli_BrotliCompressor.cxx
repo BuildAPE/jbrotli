@@ -95,14 +95,14 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressByteBuf
   params.lgblock = lgblock;
 
   uint8_t *inBufPtr = (uint8_t *)env->GetDirectBufferAddress(inBuf);
-  if (inBufPtr==NULL) return -1;
+  if (inBufPtr==NULL) return -20;
 
   uint8_t *outBufPtr = (uint8_t *)env->GetDirectBufferAddress(outBuf);
-  if (outBufPtr==NULL) return -1;
+  if (outBufPtr==NULL) return -21;
 
   int ok = brotli::BrotliCompressBuffer(params, inLen, inBufPtr, &output_length, outBufPtr);
   if (!ok) {
-    return -1;
+    return -22;
   }
 
   return output_length;
