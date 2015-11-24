@@ -49,24 +49,30 @@ extern "C" {
 /*
  * Class:     de_bitkings_jbrotli_BrotliCompressor
  * Method:    compressBytes
- * Signature: (Lde/bitkings/jbrotli/Brotli/Parameter;[BII[B)I
+ * Signature: (IIII[BII[B)I
  */
-JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(JNIEnv* env, jclass thisObj, jobject brotliParams, jbyteArray inByteArray, jint inPos, jint inLen, jbyteArray outByteArray) {
+JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes
+  (JNIEnv* env, jclass thisObj, jint mode, jint quality, jint lgwin, jint lgblock, jbyteArray inByteArray, jint inPos, jint inLen, jbyteArray outByteArray) {
+
   size_t output_length;
   brotli::BrotliParams params;
+  //params.mode = mode;
+  params.quality = quality;
+  params.lgwin = lgwin;
+  params.lgblock = lgblock;
 
   uint8_t *inBufCritArray = (uint8_t*)env->GetPrimitiveArrayCritical(inByteArray, 0);
-  if (inBufCritArray == NULL || env->ExceptionCheck()) return -1; 
+  if (inBufCritArray == NULL || env->ExceptionCheck()) return -1;
   uint8_t *outBufCritArray = (uint8_t*)env->GetPrimitiveArrayCritical(outByteArray, 0);
   if (outBufCritArray == NULL || env->ExceptionCheck()) return -1;
-  
+
   int ok = brotli::BrotliCompressBuffer(params, inLen, inBufCritArray, &output_length, outBufCritArray);
-  
+
   env->ReleasePrimitiveArrayCritical(outByteArray, outBufCritArray, 0);
   if (env->ExceptionCheck()) return -1;
   env->ReleasePrimitiveArrayCritical(inByteArray, inBufCritArray, 0);
   if (env->ExceptionCheck()) return -1;
-  
+
   if (!ok) {
     return -1;
   }
@@ -76,11 +82,17 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
 /*
  * Class:     de_bitkings_jbrotli_BrotliCompressor
  * Method:    compressByteBuffer
- * Signature: (Lde/bitkings/jbrotli/Brotli/Parameter;Ljava/nio/ByteBuffer;IILjava/nio/ByteBuffer;)I
+ * Signature: (IIIILjava/nio/ByteBuffer;IILjava/nio/ByteBuffer;)I
  */
-JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressByteBuffer(JNIEnv* env, jclass thisObj, jobject brotliParams, jobject inBuf, jint inPos, jint inLen, jobject outBuf) {
+JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressByteBuffer
+  (JNIEnv* env, jclass thisObj, jint mode, jint quality, jint lgwin, jint lgblock, jobject inBuf, jint inPos, jint inLen, jobject outBuf) {
+
   size_t output_length;
   brotli::BrotliParams params;
+  //params.mode = mode;
+  params.quality = quality;
+  params.lgwin = lgwin;
+  params.lgblock = lgblock;
 
   uint8_t *inBufPtr = (uint8_t *)env->GetDirectBufferAddress(inBuf);
   if (inBufPtr==NULL) return -1;

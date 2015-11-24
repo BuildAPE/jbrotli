@@ -55,21 +55,21 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
   size_t output_length;
 
   uint8_t *encodedBuffer = (uint8_t*)env->GetPrimitiveArrayCritical(encodedByteArray, 0);
-  if (encodedBuffer == NULL || env->ExceptionCheck()) return -1; 
+  if (encodedBuffer == NULL || env->ExceptionCheck()) return -1;
   uint8_t *outBuffer = (uint8_t*)env->GetPrimitiveArrayCritical(outByteArray, 0);
   if (outBuffer == NULL || env->ExceptionCheck()) return -1;
-  
+
   BrotliResult brotliResult = BrotliDecompressBuffer(inLen, encodedBuffer, &output_length, outBuffer);
-  
+
   if (brotliResult == BROTLI_RESULT_ERROR) return -10;
   if (brotliResult == BROTLI_RESULT_NEEDS_MORE_INPUT) return -12;
   if (brotliResult == BROTLI_RESULT_NEEDS_MORE_OUTPUT) return -13;
-  
+
   env->ReleasePrimitiveArrayCritical(outByteArray, outBuffer, 0);
   if (env->ExceptionCheck()) return -1;
   env->ReleasePrimitiveArrayCritical(encodedByteArray, encodedBuffer, 0);
   if (env->ExceptionCheck()) return -1;
-  
+
   return output_length;
 }
 
