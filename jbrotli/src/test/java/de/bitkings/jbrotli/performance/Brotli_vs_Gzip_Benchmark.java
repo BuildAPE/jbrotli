@@ -31,6 +31,7 @@ public class Brotli_vs_Gzip_Benchmark {
     System.loadLibrary("brotli");
     brotliCompressor = new BrotliCompressor();
     out = new byte[24603];
+    arrayOutputStream = new ByteArrayOutputStream(24603);
     cpHtmlData = loadCanterburyCorpusHtmlFile();
     brotliParameter = new Brotli.Parameter(Brotli.Mode.GENERIC, 5, Brotli.DEFAULT_PARAMETER_LGWIN, Brotli.DEFAULT_PARAMETER_LGBLOCK);
   }
@@ -49,7 +50,7 @@ public class Brotli_vs_Gzip_Benchmark {
 
   @Benchmark
   public void gzip_compression() throws IOException {
-    arrayOutputStream = new ByteArrayOutputStream(24603);
+    arrayOutputStream.reset();
     GZIPOutputStream gzipOutputStream = new GZIPOutputStream(arrayOutputStream);
     gzipOutputStream.write(cpHtmlData, 0, cpHtmlData.length);
   }
