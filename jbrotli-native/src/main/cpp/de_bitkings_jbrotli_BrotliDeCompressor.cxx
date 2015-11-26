@@ -1,5 +1,3 @@
-
-
 /* exporting methods */
 #if (__GNUC__ >= 4) || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)
 #  ifndef GCC_HASCLASSVISIBILITY
@@ -23,7 +21,7 @@
 
 /* Fix for jlong on some versions of gcc on Windows */
 #if defined(__GNUC__) && !defined(__INTEL_COMPILER)
-  typedef long long __int64;
+typedef long long __int64;
 #endif
 
 /* Fix for jlong on 64-bit x86 Solaris */
@@ -41,7 +39,6 @@
 #include "../../../../brotli/dec/decode.h"
 
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -51,12 +48,17 @@ extern "C" {
  * Method:    deCompressBytes
  * Signature: ([BII[B)I
  */
-JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressBytes(JNIEnv *env, jclass thisObj, jbyteArray encodedByteArray, jint inPos, jint inLen, jbyteArray outByteArray) {
+JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressBytes(JNIEnv *env,
+                                                                                   jclass thisObj,
+                                                                                   jbyteArray encodedByteArray,
+                                                                                   jint inPos,
+                                                                                   jint inLen,
+                                                                                   jbyteArray outByteArray) {
   size_t output_length;
 
-  uint8_t *encodedBuffer = (uint8_t*)env->GetPrimitiveArrayCritical(encodedByteArray, 0);
+  uint8_t *encodedBuffer = (uint8_t *) env->GetPrimitiveArrayCritical(encodedByteArray, 0);
   if (encodedBuffer == NULL || env->ExceptionCheck()) return -1;
-  uint8_t *outBuffer = (uint8_t*)env->GetPrimitiveArrayCritical(outByteArray, 0);
+  uint8_t *outBuffer = (uint8_t *) env->GetPrimitiveArrayCritical(outByteArray, 0);
   if (outBuffer == NULL || env->ExceptionCheck()) return -1;
 
   BrotliResult brotliResult = BrotliDecompressBuffer(inLen, encodedBuffer, &output_length, outBuffer);
@@ -78,7 +80,12 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
  * Method:    deCompressByteBuffer
  * Signature: (Ljava/nio/ByteBuffer;IILjava/nio/ByteBuffer;)I
  */
-JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByteBuffer(JNIEnv *env, jclass thisObj, jobject inBuf, jint inPos, jint inLen, jobject outBuf) {
+JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByteBuffer(JNIEnv *env,
+                                                                                        jclass thisObj,
+                                                                                        jobject inBuf,
+                                                                                        jint inPos,
+                                                                                        jint inLen,
+                                                                                        jobject outBuf) {
   // size_t output_length;
   // brotli::BrotliParams params;
 
