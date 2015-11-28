@@ -2,12 +2,11 @@ package de.bitkings.jbrotli;
 
 import org.testng.annotations.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class BrotliExampleTest {
 
   /**
    * intended to be used in README ... to make sure it will compile ;-)
+   *
    * @throws Exception
    */
   @Test
