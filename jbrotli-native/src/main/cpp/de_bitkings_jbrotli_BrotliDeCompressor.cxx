@@ -104,6 +104,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
   if (outBufPtr==NULL) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF;
 
   size_t output_length;
+  inBufPtr += inPos;
   BrotliResult brotliResult = BrotliDecompressBuffer(inLen, inBufPtr, &output_length, outBufPtr);
 
   if (brotliResult == BROTLI_RESULT_ERROR) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ByteBuffer_BROTLI_RESULT_ERROR;

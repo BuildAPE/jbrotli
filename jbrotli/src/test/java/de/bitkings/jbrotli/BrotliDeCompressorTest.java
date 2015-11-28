@@ -91,4 +91,30 @@ public class BrotliDeCompressorTest {
     outBuf.get(out);
     assertThat(out).startsWith(A_BYTES);
   }
+
+  @Test
+  public void decompress_with_ByteBuffer_using_position_and_length() throws Exception {
+    // setup
+    byte[] tmpXXX = new byte[100];
+    Arrays.fill(tmpXXX, (byte) 'x');
+    ByteBuffer inBuffer = ByteBuffer.allocateDirect(tmpXXX.length);
+    ByteBuffer outBuffer = ByteBuffer.allocateDirect(100);
+    inBuffer.put(tmpXXX);
+
+    // given
+    int testPosition = 23;
+    int testLength = A_BYTES_COMPRESSED.length;
+    inBuffer.position(testPosition);
+    inBuffer.put(A_BYTES_COMPRESSED);
+    inBuffer.position(testPosition);
+
+    // when
+    int outLen = decompressor.deCompress(inBuffer, testPosition, testLength, outBuffer);
+
+    // then
+    assertThat(outLen).isEqualTo(A_BYTES.length);
+    byte[] buf = new byte[A_BYTES.length];
+    outBuffer.get(buf);
+    assertThat(buf).startsWith(A_BYTES);
+  }
 }
