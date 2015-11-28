@@ -71,34 +71,27 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initBrotl
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    compressBytes
- * Signature: (IIII[BII[B)I
+ * Signature: ([BII[B)I
  */
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressBytes(JNIEnv *env,
                                                                                      jobject thisObj,
-                                                                                     jint mode,
-                                                                                     jint quality,
-                                                                                     jint lgwin,
-                                                                                     jint lgblock,
                                                                                      jbyteArray inByteArray,
                                                                                      jint inPos,
                                                                                      jint inLen,
                                                                                      jbyteArray outByteArray) {
-
-  size_t output_length;
-  brotli::BrotliParams params;
-  //params.mode = mode;
-  params.quality = quality;
-  params.lgwin = lgwin;
-  params.lgblock = lgblock;
 
   uint8_t *inBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(inByteArray, 0);
   if (inBufCritArray == NULL || env->ExceptionCheck()) return -1;
   uint8_t *outBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(outByteArray, 0);
   if (outBufCritArray == NULL || env->ExceptionCheck()) return -1;
 
-//  int ok = brotli::BrotliCompressBuffer(params, inLen, inBufCritArray, &output_length, outBufCritArray);
+  size_t output_length;
+  uint8_t *brotliOutBufferPtr;
   compressor->CopyInputToRingBuffer(inLen, inBufCritArray);
-  compressor->WriteBrotliData(true, true, &output_length, &outBufCritArray);
+  compressor->WriteBrotliData(true, false, &output_length, &brotliOutBufferPtr);
+  if (output_length > 0) {
+    memcpy(outBufCritArray, brotliOutBufferPtr, output_length);
+  }
 
   env->ReleasePrimitiveArrayCritical(outByteArray, outBufCritArray, 0);
   if (env->ExceptionCheck()) return -1;
@@ -111,24 +104,14 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    compressByteBuffer
- * Signature: (IIIILjava/nio/ByteBuffer;IILjava/nio/ByteBuffer;)I
+ * Signature: (Ljava/nio/ByteBuffer;IILjava/nio/ByteBuffer;)I
  */
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressByteBuffer(JNIEnv *env,
                                                                                           jobject thisObj,
-                                                                                          jint mode,
-                                                                                          jint quality,
-                                                                                          jint lgwin,
-                                                                                          jint lgblock,
                                                                                           jobject inBuf,
                                                                                           jint inPos,
-                                                                                          jint inLen, jobject outBuf) {
-
-  size_t output_length;
-  brotli::BrotliParams params;
-  //params.mode = mode;
-  params.quality = quality;
-  params.lgwin = lgwin;
-  params.lgblock = lgblock;
+                                                                                          jint inLen,
+                                                                                          jobject outBuf) {
 
   uint8_t *inBufPtr = (uint8_t *) env->GetDirectBufferAddress(inBuf);
   if (inBufPtr == NULL) return -20;
@@ -136,9 +119,13 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
   uint8_t *outBufPtr = (uint8_t *) env->GetDirectBufferAddress(outBuf);
   if (outBufPtr == NULL) return -21;
 
-  int ok = brotli::BrotliCompressBuffer(params, inLen, inBufPtr, &output_length, outBufPtr);
-  if (!ok) {
-    return -22;
+  size_t output_length;
+  uint8_t *brotliOutBufferPtr;
+  compressor->CopyInputToRingBuffer(inLen, inBufPtr);
+  compressor->WriteBrotliData(true, false, &output_length, &brotliOutBufferPtr);
+
+  if (output_length > 0) {
+    memcpy(outBufPtr, brotliOutBufferPtr, output_length);
   }
 
   return output_length;

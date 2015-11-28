@@ -18,18 +18,18 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initBrotl
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    compressBytes
- * Signature: (IIII[BII[B)I
+ * Signature: ([BII[B)I
  */
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressBytes
-  (JNIEnv *, jobject, jint, jint, jint, jint, jbyteArray, jint, jint, jbyteArray);
+  (JNIEnv *, jobject, jbyteArray, jint, jint, jbyteArray);
 
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    compressByteBuffer
- * Signature: (IIIILjava/nio/ByteBuffer;IILjava/nio/ByteBuffer;)I
+ * Signature: (Ljava/nio/ByteBuffer;IILjava/nio/ByteBuffer;)I
  */
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressByteBuffer
-  (JNIEnv *, jobject, jint, jint, jint, jint, jobject, jint, jint, jobject);
+  (JNIEnv *, jobject, jobject, jint, jint, jobject);
 
 #ifdef __cplusplus
 }
