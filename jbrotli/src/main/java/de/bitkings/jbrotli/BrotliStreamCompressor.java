@@ -27,7 +27,7 @@ public final class BrotliStreamCompressor {
     throw new UnsupportedOperationException("not yet implemented");
   }
 
-  public final int compress(ByteBuffer in, int inPosition, int inLength, ByteBuffer out) {
+  public final int compress(ByteBuffer in, int inLength, ByteBuffer out) {
     throw new UnsupportedOperationException("not yet implemented");
   }
 

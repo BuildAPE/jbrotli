@@ -95,6 +95,8 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
 
   size_t output_length;
   uint8_t *brotliOutBufferPtr;
+
+  inBufCritArray += inPos;
   compressor->CopyInputToRingBuffer(inLen, inBufCritArray);
   bool writeResult = compressor->WriteBrotliData(true, false, &output_length, &brotliOutBufferPtr);
   if (!writeResult) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_WriteBrotliData;
@@ -123,6 +125,10 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
                                                                                           jint inLen,
                                                                                           jobject outBuf) {
 
+  if (inPos < 0 || inLen < 0) {
+    env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: input array position and length must be greater than zero.");
+  }
+
   if (inLen == 0) return 0;
 
   uint8_t *inBufPtr = (uint8_t *) env->GetDirectBufferAddress(inBuf);
@@ -133,6 +139,8 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
 
   size_t output_length;
   uint8_t *brotliOutBufferPtr;
+
+  inBufPtr += inPos;
   compressor->CopyInputToRingBuffer(inLen, inBufPtr);
   bool writeResult = compressor->WriteBrotliData(true, false, &output_length, &brotliOutBufferPtr);
   if (!writeResult) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ByteBuffer_WriteBrotliData;

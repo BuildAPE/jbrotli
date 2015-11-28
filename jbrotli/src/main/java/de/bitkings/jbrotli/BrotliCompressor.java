@@ -41,19 +41,18 @@ public final class BrotliCompressor {
    * @throws BrotliException
    */
   public final int compress(Brotli.Parameter parameter, ByteBuffer in, ByteBuffer out) throws BrotliException {
-    return compress(parameter, in, 0, in.limit(), out);
+    return compress(parameter, in, in.limit(), out);
   }
 
   /**
    * @param parameter  parameter
    * @param in         input
-   * @param inPosition input position
    * @param inLength   input length
    * @param out        output
    * @return output buffer length
    * @throws BrotliException
    */
-  public final int compress(Brotli.Parameter parameter, ByteBuffer in, int inPosition, int inLength, ByteBuffer out) throws BrotliException {
+  public final int compress(Brotli.Parameter parameter, ByteBuffer in, int inLength, ByteBuffer out) throws BrotliException {
     int pos = in.position();
     int limit = in.limit();
     assert (pos <= limit);

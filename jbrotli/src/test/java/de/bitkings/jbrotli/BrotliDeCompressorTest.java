@@ -109,7 +109,7 @@ public class BrotliDeCompressorTest {
     inBuffer.position(testPosition);
 
     // when
-    int outLen = decompressor.deCompress(inBuffer, testPosition, testLength, outBuffer);
+    int outLen = decompressor.deCompress(inBuffer, testLength, outBuffer);
 
     // then
     assertThat(outLen).isEqualTo(A_BYTES.length);

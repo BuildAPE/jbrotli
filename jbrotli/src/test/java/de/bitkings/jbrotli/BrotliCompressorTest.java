@@ -104,7 +104,7 @@ public class BrotliCompressorTest {
     inBuffer.position(testPosition);
 
     // when
-    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuffer, testPosition, testLength, outBuffer);
+    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuffer, testLength, outBuffer);
 
     // then
     assertThat(outLength).isEqualTo(A_BYTES_COMPRESSED.length);
