@@ -36,6 +36,26 @@ public class BrotliDeCompressorTest {
     assertThat(out).startsWith(A_BUFFER);
   }
 
+  @Test(expectedExceptions = IllegalArgumentException.class)
+  public void using_negative_position_throws_IllegalArgumentException() throws Exception {
+    byte[] in = A_BYTES_COMPRESSED;
+    byte[] out = new byte[2048];
+
+    decompressor.deCompress(in, -1, in.length, out);
+
+    // expect exception
+  }
+
+  @Test(expectedExceptions = IllegalArgumentException.class)
+  public void using_negative_length_throws_IllegalArgumentException() throws Exception {
+    byte[] in = A_BYTES_COMPRESSED;
+    byte[] out = new byte[2048];
+
+    decompressor.deCompress(in, 0, -1, out);
+
+    // expect exception
+  }
+
   @Test
   public void decompress_with_ByteBuffer() throws Exception {
 

@@ -25,6 +25,9 @@ public final class BrotliDeCompressor {
    * @throws BrotliException
    */
   public final int deCompress(byte[] in, int inPosition, int inLength, byte[] out) throws BrotliException {
+    if (inPosition + inLength > in.length) {
+      throw new IllegalArgumentException("The source position and length must me smaller then the source byte array's length.");
+    }
     return assertBrotliOk(deCompressBytes(in, inPosition, inLength, out));
   }
 
