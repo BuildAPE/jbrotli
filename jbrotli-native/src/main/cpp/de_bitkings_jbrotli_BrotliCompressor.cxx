@@ -37,6 +37,7 @@ typedef long long __int64;
 
 #include "de_bitkings_jbrotli_BrotliCompressor.h"
 #include "../../../../brotli/enc/encode.h"
+#include "./de_bitkings_jbrotli_BrotliError.h"
 
 
 #ifdef __cplusplus
@@ -67,22 +68,21 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
   params.lgblock = lgblock;
 
   uint8_t *inBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(inByteArray, 0);
-  if (inBufCritArray == NULL || env->ExceptionCheck()) return -1;
+  if (inBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_COMPRESS_GetPrimitiveArrayCritical_INBUF;
   uint8_t *outBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(outByteArray, 0);
-  if (outBufCritArray == NULL || env->ExceptionCheck()) return -1;
+  if (outBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_COMPRESS_GetPrimitiveArrayCritical_OUTBUF;
 
-  // int ok = brotli::BrotliCompressBuffer(params, inLen, inBufCritArray, &output_length, outBufCritArray);
-  output_length = inLen;
-  memcpy(outBufCritArray, inBufCritArray, inLen);
+  int ok = brotli::BrotliCompressBuffer(params, inLen, inBufCritArray, &output_length, outBufCritArray);
 
   env->ReleasePrimitiveArrayCritical(outByteArray, outBufCritArray, 0);
-  if (env->ExceptionCheck()) return -1;
+  if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_COMPRESS_ReleasePrimitiveArrayCritical_OUTBUF;
   env->ReleasePrimitiveArrayCritical(inByteArray, inBufCritArray, 0);
-  if (env->ExceptionCheck()) return -1;
+  if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_COMPRESS_ReleasePrimitiveArrayCritical_INBUF;
 
-  // if (!ok) {
-  //   return -1;
-  // }
+  if (!ok) {
+    return de_bitkings_jbrotli_BrotliError_COMPRESS_BrotliCompressBuffer;
+  }
+
   return output_length;
 }
 
@@ -110,14 +110,14 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressByteBuf
   params.lgblock = lgblock;
 
   uint8_t *inBufPtr = (uint8_t *) env->GetDirectBufferAddress(inBuf);
-  if (inBufPtr == NULL) return -20;
+  if (inBufPtr == NULL) return de_bitkings_jbrotli_BrotliError_COMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF;
 
   uint8_t *outBufPtr = (uint8_t *) env->GetDirectBufferAddress(outBuf);
-  if (outBufPtr == NULL) return -21;
+  if (outBufPtr == NULL) return de_bitkings_jbrotli_BrotliError_COMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF;
 
   int ok = brotli::BrotliCompressBuffer(params, inLen, inBufPtr, &output_length, outBufPtr);
   if (!ok) {
-    return -22;
+    return de_bitkings_jbrotli_BrotliError_COMPRESS_ByteBuffer_BrotliCompressBuffer;
   }
 
   return output_length;
