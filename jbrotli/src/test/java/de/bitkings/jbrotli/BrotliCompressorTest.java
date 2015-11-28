@@ -56,7 +56,7 @@ public class BrotliCompressorTest {
   }
 
   @Test(expectedExceptions = IllegalArgumentException.class)
-  public void using_negative_position_throws_IllegalArgumentException() throws Exception {
+  public void compress_with_byte_array_using_negative_position_throws_IllegalArgumentException() throws Exception {
     byte[] out = new byte[2048];
 
     compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, -1, A_BYTES.length, out);
@@ -65,7 +65,7 @@ public class BrotliCompressorTest {
   }
 
   @Test(expectedExceptions = IllegalArgumentException.class)
-  public void using_negative_length_throws_IllegalArgumentException() throws Exception {
+  public void compress_with_byte_array_using_negative_length_throws_IllegalArgumentException() throws Exception {
     byte[] out = new byte[2048];
 
     compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, 0, -1, out);
@@ -75,16 +75,26 @@ public class BrotliCompressorTest {
 
   @Test
   public void compress_with_ByteBuffer() throws Exception {
-    ByteBuffer aDirectBuffer = ByteBuffer.allocateDirect(A_BYTES.length);
-    aDirectBuffer.put(A_BYTES);
-    aDirectBuffer.position(0);
+    ByteBuffer inBuffer = ByteBuffer.allocateDirect(A_BYTES.length);
+    inBuffer.put(A_BYTES);
+    inBuffer.position(0);
     ByteBuffer outBuffer = ByteBuffer.allocateDirect(10);
-    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, aDirectBuffer, outBuffer);
+    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuffer, outBuffer);
 
     assertThat(outLength).isEqualTo(10);
     byte[] buf = new byte[10];
     outBuffer.get(buf);
     assertThat(buf).startsWith(A_BYTES_COMPRESSED);
+  }
+
+  @Test(expectedExceptions = IllegalArgumentException.class, enabled = false) // crashes VM - reason unknown
+  public void compress_with_ByteBuffer_using_negative_length_throws_IllegalArgumentException() throws Exception {
+    ByteBuffer inBuffer = ByteBuffer.allocateDirect(A_BYTES.length);
+    ByteBuffer outBuffer = ByteBuffer.allocateDirect(A_BYTES_COMPRESSED.length);
+
+    compressor.compress(Brotli.DEFAULT_PARAMETER, inBuffer, -1, outBuffer);
+
+    // expect exception
   }
 
   @Test

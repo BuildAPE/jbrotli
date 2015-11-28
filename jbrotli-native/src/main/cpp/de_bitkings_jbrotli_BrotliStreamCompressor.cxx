@@ -126,7 +126,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
                                                                                           jobject outBuf) {
 
   if (inPos < 0 || inLen < 0) {
-    env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: input array position and length must be greater than zero.");
+    env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: input ByteBuffer position and length must be greater than zero.");
   }
 
   if (inLen == 0) return 0;
