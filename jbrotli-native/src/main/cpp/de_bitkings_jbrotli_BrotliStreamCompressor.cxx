@@ -82,6 +82,11 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
                                                                                      jint inPos,
                                                                                      jint inLen,
                                                                                      jbyteArray outByteArray) {
+  if (inPos < 0 || inLen < 0) {
+    env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: input array position and length must be greater than zero.");
+  }
+
+  if (inLen == 0) return 0;
 
   uint8_t *inBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(inByteArray, 0);
   if (inBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_GetPrimitiveArrayCritical_INBUF;
@@ -117,6 +122,8 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
                                                                                           jint inPos,
                                                                                           jint inLen,
                                                                                           jobject outBuf) {
+
+  if (inLen == 0) return 0;
 
   uint8_t *inBufPtr = (uint8_t *) env->GetDirectBufferAddress(inBuf);
   if (inBufPtr == NULL) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF;

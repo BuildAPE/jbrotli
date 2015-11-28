@@ -17,6 +17,9 @@ public final class BrotliStreamCompressor {
   }
 
   public final int compress(byte[] in, int inPosition, int inLength, byte[] out) {
+    if (inPosition + inLength > in.length || inPosition < 0 || inLength < 0) {
+      throw new IllegalArgumentException("The source position + length must me smaller then the source byte array's length.");
+    }
     return assertBrotliOk(compressBytes(in, inPosition, inLength, out));
   }
 
