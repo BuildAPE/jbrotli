@@ -14,7 +14,7 @@ public final class BrotliCompressor {
    * @throws BrotliException
    */
   public final int compress(Brotli.Parameter parameter, byte[] in, byte[] out) throws BrotliException {
-    return assertBrotliOk(compress(parameter, in, 0, in.length, out));
+    return compress(parameter, in, 0, in.length, out);
   }
 
   /**
@@ -41,7 +41,7 @@ public final class BrotliCompressor {
    * @throws BrotliException
    */
   public final int compress(Brotli.Parameter parameter, ByteBuffer in, ByteBuffer out) throws BrotliException {
-    return assertBrotliOk(compress(parameter, in, 0, in.limit(), out));
+    return compress(parameter, in, 0, in.limit(), out);
   }
 
   /**

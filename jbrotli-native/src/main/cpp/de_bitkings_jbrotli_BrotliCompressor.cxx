@@ -60,6 +60,12 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
                                                                                jint inLen,
                                                                                jbyteArray outByteArray) {
 
+  if (inPos < 0 || inLen < 0) {
+    env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: input array position and length must be greater than zero.");
+  }
+
+  if (inLen == 0) return 0;
+
   size_t output_length;
   brotli::BrotliParams params;
   //params.mode = mode;
@@ -72,6 +78,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
   uint8_t *outBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(outByteArray, 0);
   if (outBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_COMPRESS_GetPrimitiveArrayCritical_OUTBUF;
 
+  inBufCritArray += inPos;
   int ok = brotli::BrotliCompressBuffer(params, inLen, inBufCritArray, &output_length, outBufCritArray);
 
   env->ReleasePrimitiveArrayCritical(outByteArray, outBufCritArray, 0);
@@ -102,7 +109,8 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressByteBuf
                                                                                     jint inLen,
                                                                                     jobject outBuf) {
 
-  size_t output_length;
+  if (inLen == 0) return 0;
+
   brotli::BrotliParams params;
   //params.mode = mode;
   params.quality = quality;
@@ -115,6 +123,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressByteBuf
   uint8_t *outBufPtr = (uint8_t *) env->GetDirectBufferAddress(outBuf);
   if (outBufPtr == NULL) return de_bitkings_jbrotli_BrotliError_COMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF;
 
+  size_t output_length;
   int ok = brotli::BrotliCompressBuffer(params, inLen, inBufPtr, &output_length, outBufPtr);
   if (!ok) {
     return de_bitkings_jbrotli_BrotliError_COMPRESS_ByteBuffer_BrotliCompressBuffer;
