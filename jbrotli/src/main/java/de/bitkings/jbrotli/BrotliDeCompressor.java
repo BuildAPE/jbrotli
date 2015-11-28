@@ -6,18 +6,46 @@ import static de.bitkings.jbrotli.BrotliErrorChecker.assertBrotliOk;
 
 public final class BrotliDeCompressor {
 
+  /**
+   * @param in  compressed input
+   * @param out output buffer
+   * @return output buffer length
+   * @throws BrotliException
+   */
   public final int deCompress(byte[] in, byte[] out) throws BrotliException {
     return deCompress(in, 0, in.length, out);
   }
 
+  /**
+   * @param in         compressed input
+   * @param inPosition input position
+   * @param inLength   input length
+   * @param out        output buffer
+   * @return output buffer length
+   * @throws BrotliException
+   */
   public final int deCompress(byte[] in, int inPosition, int inLength, byte[] out) throws BrotliException {
     return assertBrotliOk(deCompressBytes(in, inPosition, inLength, out));
   }
 
+  /**
+   * @param in  compressed input
+   * @param out output buffer
+   * @return output buffer length
+   * @throws BrotliException
+   */
   public final int deCompress(ByteBuffer in, ByteBuffer out) throws BrotliException {
     return deCompress(in, 0, in.limit(), out);
   }
 
+  /**
+   * @param in         compressed input
+   * @param inPosition input position
+   * @param inLength   input length
+   * @param out        output buffer
+   * @return output buffer length
+   * @throws BrotliException
+   */
   public final int deCompress(ByteBuffer in, int inPosition, int inLength, ByteBuffer out) throws BrotliException {
     int pos = in.position();
     int limit = in.limit();
