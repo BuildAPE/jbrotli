@@ -1,8 +1,5 @@
 package de.bitkings.jbrotli;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-
 public class BrotliErrorChecker {
 
   /**
@@ -14,13 +11,14 @@ public class BrotliErrorChecker {
 
   /**
    * @param errorCode errorCode
-   * @throws UncheckedIOException in case of errors
+   * @throws BrotliException in case of errors
    */
-  public static void assertBrotliOk(int errorCode) throws UncheckedIOException {
+  public static int assertBrotliOk(int errorCode) throws BrotliException {
     String msg = resolveErrorCode2Message(errorCode);
     if (msg != null) {
-      throw new UncheckedIOException(new IOException(msg));
+      throw new BrotliException(msg);
     }
+    return errorCode;
   }
 
   /**
@@ -29,9 +27,21 @@ public class BrotliErrorChecker {
    */
   public static String resolveErrorCode2Message(int errorCode) {
     if (isBrotliOk(errorCode)) return null;
+    String msg = " (Error code: " + errorCode + ")";
     switch (errorCode) {
+      case -1:
+        return "An error happened inside JNI function call. Maybe OOME or other issues." + msg;
+      case BrotliError.DECOMPRESS_BROTLI_RESULT_ERROR:
+      case BrotliError.DECOMPRESS_ByteBuffer_BROTLI_RESULT_ERROR:
+        return "Decoding error, e.g. corrupt input or no memory left." + msg;
+      case BrotliError.DECOMPRESS_BROTLI_RESULT_NEEDS_MORE_INPUT:
+      case BrotliError.DECOMPRESS_ByteBuffer_BROTLI_RESULT_NEEDS_MORE_INPUT:
+        return "Decompression partially done, but must be invoked again with more input." + msg;
+      case BrotliError.DECOMPRESS_BROTLI_RESULT_NEEDS_MORE_OUTPUT:
+      case BrotliError.DECOMPRESS_ByteBuffer_BROTLI_RESULT_NEEDS_MORE_OUTPUT:
+        return "Decompression partially done, but must be invoked again with more output." + msg;
       default:
-        return "Error in native Brotli library. Error code: " + errorCode;
+        return "Error in native Brotli library." + msg;
     }
   }
 

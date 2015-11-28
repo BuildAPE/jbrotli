@@ -2,12 +2,14 @@ package de.bitkings.jbrotli;
 
 import java.nio.ByteBuffer;
 
+import static de.bitkings.jbrotli.BrotliErrorChecker.assertBrotliOk;
+
 public final class BrotliStreamCompressor {
 
   private long brotliCompressorAddr;
 
   public final void init(Brotli.Parameter parameter) {
-    initBrotliCompressor(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock());
+    assertBrotliOk(initBrotliCompressor(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock()));
   }
 
   public final int compress(byte[] in, byte[] out) {
@@ -15,7 +17,7 @@ public final class BrotliStreamCompressor {
   }
 
   public final int compress(byte[] in, int inPosition, int inLength, byte[] out) {
-    return compressBytes(in, inPosition, inLength, out);
+    return assertBrotliOk(compressBytes(in, inPosition, inLength, out));
   }
 
   public final int compress(ByteBuffer in, ByteBuffer out) {

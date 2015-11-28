@@ -2,6 +2,8 @@ package de.bitkings.jbrotli;
 
 import java.nio.ByteBuffer;
 
+import static de.bitkings.jbrotli.BrotliErrorChecker.assertBrotliOk;
+
 public final class BrotliCompressor {
 
   public final int compress(Brotli.Parameter parameter, byte[] in, byte[] out) {
@@ -9,7 +11,7 @@ public final class BrotliCompressor {
   }
 
   public final int compress(Brotli.Parameter parameter, byte[] in, int inPosition, int inLength, byte[] out) {
-    return compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in, inPosition, inLength, out);
+    return assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in, inPosition, inLength, out));
   }
 
   public final int compress(Brotli.Parameter parameter, ByteBuffer in, ByteBuffer out) {
@@ -25,14 +27,14 @@ public final class BrotliCompressor {
     if (rem <= 0)
       return -30;
     if (in.isDirect() && out.isDirect()) {
-      outLength = compressByteBuffer(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in, in.position(), inLength, out);
+      outLength = assertBrotliOk(compressByteBuffer(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in, in.position(), inLength, out));
     } else if (in.hasArray() && out.hasArray()) {
-      outLength = compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in.array(), pos + in.arrayOffset(), rem, out.array());
+      outLength = assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in.array(), pos + in.arrayOffset(), rem, out.array()));
       out.limit(pos + outLength);
     } else {
       byte[] b = new byte[rem];
       in.get(b);
-      outLength = compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), b, 0, b.length, out.array());
+      outLength = assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), b, 0, b.length, out.array()));
     }
     in.position(limit);
     return outLength;

@@ -35,8 +35,8 @@ typedef long long __int64;
 #include <stdlib.h>
 #include <string.h>
 
-#include "de_bitkings_jbrotli_BrotliDeCompressor.h"
 #include "../../../../brotli/dec/decode.h"
+#include "./de_bitkings_jbrotli_BrotliDeCompressor.h"
 #include "./de_bitkings_jbrotli_BrotliError.h"
 
 
@@ -87,22 +87,21 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
                                                                                         jint inPos,
                                                                                         jint inLen,
                                                                                         jobject outBuf) {
-  // size_t output_length;
-  // brotli::BrotliParams params;
 
-  // uint8_t *inBufPtr = (uint8_t *)env->GetDirectBufferAddress(inBuf);
-  // if (inBufPtr==NULL) return -1;
+  uint8_t *inBufPtr = (uint8_t *)env->GetDirectBufferAddress(inBuf);
+  if (inBufPtr==NULL) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF;
 
-  // uint8_t *outBufPtr = (uint8_t *)env->GetDirectBufferAddress(outBuf);
-  // if (outBufPtr==NULL) return -1;
+  uint8_t *outBufPtr = (uint8_t *)env->GetDirectBufferAddress(outBuf);
+  if (outBufPtr==NULL) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF;
 
-  // int ok = brotli::BrotliCompressBuffer(params, inLen, inBufPtr, &output_length, outBufPtr);
-  // if (!ok) {
-  //   return -1;
-  // }
+  size_t output_length;
+  BrotliResult brotliResult = BrotliDecompressBuffer(inLen, inBufPtr, &output_length, outBufPtr);
 
-  // return output_length;
-  return -1;
+  if (brotliResult == BROTLI_RESULT_ERROR) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ByteBuffer_BROTLI_RESULT_ERROR;
+  if (brotliResult == BROTLI_RESULT_NEEDS_MORE_INPUT) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ByteBuffer_BROTLI_RESULT_NEEDS_MORE_INPUT;
+  if (brotliResult == BROTLI_RESULT_NEEDS_MORE_OUTPUT) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ByteBuffer_BROTLI_RESULT_NEEDS_MORE_OUTPUT;
+
+  return output_length;
 }
 
 #ifdef __cplusplus

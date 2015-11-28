@@ -20,6 +20,12 @@ public class BrotliError {
   public static final int DECOMPRESS_ReleasePrimitiveArrayCritical_OUTBUF = -35;
   public static final int DECOMPRESS_ReleasePrimitiveArrayCritical_INBUF = -36;
 
+  public static final int DECOMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF = -40;
+  public static final int DECOMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF = -41;
+  public static final int DECOMPRESS_ByteBuffer_BROTLI_RESULT_ERROR = -42;
+  public static final int DECOMPRESS_ByteBuffer_BROTLI_RESULT_NEEDS_MORE_INPUT = -43;
+  public static final int DECOMPRESS_ByteBuffer_BROTLI_RESULT_NEEDS_MORE_OUTPUT = -44;
+
   public static final int STREAM_COMPRESS_INIT_BrotliCompressor = -50;
 
   public static final int STREAM_COMPRESS_GetPrimitiveArrayCritical_INBUF = -60;

@@ -35,8 +35,8 @@ typedef long long __int64;
 #include <stdlib.h>
 #include <string.h>
 
-#include "de_bitkings_jbrotli_BrotliCompressor.h"
 #include "../../../../brotli/enc/encode.h"
+#include "./de_bitkings_jbrotli_BrotliCompressor.h"
 #include "./de_bitkings_jbrotli_BrotliError.h"
 
 

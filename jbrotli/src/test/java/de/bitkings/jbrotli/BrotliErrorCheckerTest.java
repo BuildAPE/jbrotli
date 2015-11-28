@@ -2,8 +2,6 @@ package de.bitkings.jbrotli;
 
 import org.testng.annotations.Test;
 
-import java.io.UncheckedIOException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BrotliErrorCheckerTest {
@@ -15,7 +13,7 @@ public class BrotliErrorCheckerTest {
     assertThat(BrotliErrorChecker.isBrotliOk(1)).isTrue();
   }
 
-  @Test(expectedExceptions = UncheckedIOException.class)
+  @Test(expectedExceptions = BrotliException.class)
   public void when_valid_error_exception_is_thrown() throws Exception {
 
     BrotliErrorChecker.assertBrotliOk(-1);
@@ -30,5 +28,12 @@ public class BrotliErrorCheckerTest {
     BrotliErrorChecker.assertBrotliOk(1);
 
     // expect nothing happens
+  }
+
+  @Test
+  public void assertBroltiOk_returns_the_error_code_if_all_ok() throws Exception {
+    int actual = BrotliErrorChecker.assertBrotliOk(42_42);
+
+    assertThat(actual).isEqualTo(42_42);
   }
 }
