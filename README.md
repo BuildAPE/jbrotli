@@ -10,6 +10,10 @@ Java bindings for [Brotli](https://github.com/google/brotli.git): a new compress
 
 [![License](https://img.shields.io/:license-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
+##### Status of this project
+
+🚨 Experimental 🚀
+
 ## About Brotli
 
 Brotli is a generic-purpose lossless compression algorithm that compresses data using a combination of a modern variant of the LZ77 algorithm,
