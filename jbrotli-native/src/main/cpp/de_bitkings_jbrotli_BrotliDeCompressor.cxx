@@ -68,6 +68,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
   if (outBuffer == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_GetPrimitiveArrayCritical_OUTBUF;
 
   size_t output_length;
+  encodedBuffer += inPos;
   BrotliResult brotliResult = BrotliDecompressBuffer(inLen, encodedBuffer, &output_length, outBuffer);
 
   if (brotliResult == BROTLI_RESULT_ERROR) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_BROTLI_RESULT_ERROR;
@@ -95,7 +96,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
                                                                                         jobject outBuf) {
 
   if (inLen == 0) return 0;
-  
+
   uint8_t *inBufPtr = (uint8_t *)env->GetDirectBufferAddress(inBuf);
   if (inBufPtr==NULL) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF;
 

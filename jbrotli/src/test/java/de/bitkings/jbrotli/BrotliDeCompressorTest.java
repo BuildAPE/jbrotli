@@ -5,13 +5,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
-import static de.bitkings.jbrotli.BrotliCompressorTest.A_BUFFER;
+import static de.bitkings.jbrotli.BrotliCompressorTest.A_BYTES;
+import static de.bitkings.jbrotli.BrotliCompressorTest.A_BYTES_COMPRESSED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BrotliDeCompressorTest {
-
-  public static final byte[] A_BYTES_COMPRESSED = new byte[]{27, 54, 0, 0, 36, -126, -30, -103, 64, 0};
 
   private BrotliDeCompressor decompressor;
 
@@ -32,8 +32,26 @@ public class BrotliDeCompressorTest {
 
     int outLen = decompressor.deCompress(in, out);
 
-    assertThat(outLen).isEqualTo(A_BUFFER.length);
-    assertThat(out).startsWith(A_BUFFER);
+    assertThat(outLen).isEqualTo(A_BYTES.length);
+    assertThat(out).startsWith(A_BYTES);
+  }
+
+  @Test
+  public void decompress_with_byte_array_using_position_and_length() throws Exception {
+    // setup
+    byte[] in = new byte[100];
+    Arrays.fill(in, (byte) 'x');
+    byte[] out = new byte[100];
+
+    // when
+    int testPosition = 23;
+    int testLength = A_BYTES_COMPRESSED.length;
+    System.arraycopy(A_BYTES_COMPRESSED, 0, in, testPosition, testLength);
+
+    int outLen = decompressor.deCompress(in, testPosition, testLength, out);
+
+    assertThat(outLen).isEqualTo(A_BYTES.length);
+    assertThat(out).startsWith(A_BYTES);
   }
 
   @Test(expectedExceptions = IllegalArgumentException.class)
@@ -68,9 +86,9 @@ public class BrotliDeCompressorTest {
 
     int outLen = decompressor.deCompress(inBuf, outBuf);
 
-    assertThat(outLen).isEqualTo(A_BUFFER.length);
+    assertThat(outLen).isEqualTo(A_BYTES.length);
 
     outBuf.get(out);
-    assertThat(out).startsWith(A_BUFFER);
+    assertThat(out).startsWith(A_BYTES);
   }
 }

@@ -11,7 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class BrotliCompressorTest {
 
-  static final byte[] A_BUFFER = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA".getBytes();
+  static final byte[] A_BYTES = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA".getBytes();
+  static final byte[] A_BYTES_COMPRESSED = new byte[]{27, 54, 0, 0, 36, -126, -30, -103, 64, 0};
 
   private BrotliCompressor compressor;
 
@@ -28,10 +29,10 @@ public class BrotliCompressorTest {
   @Test
   public void compress_with_byte_array() throws Exception {
     byte[] out = new byte[2048];
-    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, A_BUFFER, 0, A_BUFFER.length, out);
+    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, 0, A_BYTES.length, out);
 
     assertThat(outLength).isEqualTo(10);
-    assertThat(out).startsWith(new byte[]{27, 54, 0, 0, 36, -126, -30, -103, 64, 0});
+    assertThat(out).startsWith(A_BYTES_COMPRESSED);
   }
 
   @Test
@@ -43,22 +44,22 @@ public class BrotliCompressorTest {
 
     // given
     int testPosition = 23;
-    int testLength = A_BUFFER.length;
-    System.arraycopy(A_BUFFER, 0, in, testPosition, testLength);
+    int testLength = A_BYTES.length;
+    System.arraycopy(A_BYTES, 0, in, testPosition, testLength);
 
     // when
     int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, in, testPosition, testLength, out);
 
     // then
     assertThat(outLength).isEqualTo(10);
-    assertThat(out).startsWith(new byte[]{27, 54, 0, 0, 36, -126, -30, -103, 64, 0});
+    assertThat(out).startsWith(A_BYTES_COMPRESSED);
   }
 
   @Test(expectedExceptions = IllegalArgumentException.class)
   public void using_negative_position_throws_IllegalArgumentException() throws Exception {
     byte[] out = new byte[2048];
 
-    compressor.compress(Brotli.DEFAULT_PARAMETER, A_BUFFER, -1, A_BUFFER.length, out);
+    compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, -1, A_BYTES.length, out);
 
     // expect exception
   }
@@ -67,15 +68,15 @@ public class BrotliCompressorTest {
   public void using_negative_length_throws_IllegalArgumentException() throws Exception {
     byte[] out = new byte[2048];
 
-    compressor.compress(Brotli.DEFAULT_PARAMETER, A_BUFFER, 0, -1, out);
+    compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, 0, -1, out);
 
     // expect exception
   }
 
   @Test
   public void compress_with_ByteBuffer() throws Exception {
-    ByteBuffer aDirectBuffer = ByteBuffer.allocateDirect(A_BUFFER.length);
-    aDirectBuffer.put(A_BUFFER);
+    ByteBuffer aDirectBuffer = ByteBuffer.allocateDirect(A_BYTES.length);
+    aDirectBuffer.put(A_BYTES);
     aDirectBuffer.position(0);
     ByteBuffer outBuffer = ByteBuffer.allocateDirect(10);
     int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, aDirectBuffer, outBuffer);
@@ -83,6 +84,6 @@ public class BrotliCompressorTest {
     assertThat(outLength).isEqualTo(10);
     byte[] buf = new byte[10];
     outBuffer.get(buf);
-    assertThat(buf).startsWith(new byte[]{27, 54, 0, 0, 36, -126, -30, -103, 64, 0});
+    assertThat(buf).startsWith(A_BYTES_COMPRESSED);
   }
 }
