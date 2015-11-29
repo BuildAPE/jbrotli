@@ -8,6 +8,9 @@ platform:
 
 init:
   - "echo JAVA_HOME=%JAVA_HOME%"
+  - "java -version"
+  - "cmake --version"
+  - "mvn --version"
 
 install:
   - GIT: "submodule update --init --recursive"
