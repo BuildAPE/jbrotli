@@ -21,6 +21,80 @@
     <jmh.version>1.11.2</jmh.version>
   </properties>
 
+  <profiles>
+    <profile>
+      <id>win32-x86-x64</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+          <arch>x64</arch>
+        </os>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>de.bitkings.jbrotli</groupId>
+          <artifactId>jbrotli-native-win32-x86-64</artifactId>
+          <version>0.2.0-SNAPSHOT</version>
+          <scope>runtime</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>win32-x86-amd64</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+          <arch>amd64</arch>
+        </os>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>de.bitkings.jbrotli</groupId>
+          <artifactId>jbrotli-native-win32-x86-64</artifactId>
+          <version>0.2.0-SNAPSHOT</version>
+          <scope>runtime</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>win32-x86</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+          <arch>x86</arch>
+        </os>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>de.bitkings.jbrotli</groupId>
+          <artifactId>jbrotli-native-win32-x86</artifactId>
+          <version>0.2.0-SNAPSHOT</version>
+          <scope>runtime</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>darwin</id>
+      <activation>
+        <os>
+          <family>mac</family>
+        </os>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>de.bitkings.jbrotli</groupId>
+          <artifactId>jbrotli-native-darwin</artifactId>
+          <version>0.2.0-SNAPSHOT</version>
+          <scope>runtime</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+
+  </profiles>
+
   <dependencies>
 
     <dependency>
