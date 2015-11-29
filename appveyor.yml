@@ -7,13 +7,14 @@ platform:
   - x64
 
 init:
-  - "echo JAVA_HOME=%JAVA_HOME%"
-  - "java -version"
-  - "cmake --version"
-  - "mvn --version"
+  - cmd: "echo JAVA_HOME=%JAVA_HOME%"
+  - cmd: "java -version"
+  - cmd: "cmake --version"
 
 install:
   - GIT: "submodule update --init --recursive"
+  - cinst maven
+  - cmd: "mvn --version"
 
 build_script:
-  - mvn: "clean compile test package"
+  - cmd: "mvn clean compile test package"
