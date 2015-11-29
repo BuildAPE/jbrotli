@@ -14,6 +14,8 @@ init:
 install:
   - GIT: "submodule update --init --recursive"
   - cinst maven
+  - cmd: "echo %M2_HOME%"
+  - cmd: "echo %MAVEN_HOME%"
   - mvn "--version"
 
 build_script:
