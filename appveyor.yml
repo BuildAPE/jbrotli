@@ -14,7 +14,7 @@ init:
 install:
   - GIT: "submodule update --init --recursive"
   - cinst maven
-  - cmd: "mvn --version"
+  - mvn "--version"
 
 build_script:
   - cmd: "mvn clean compile test package"
