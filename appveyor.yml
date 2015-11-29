@@ -16,5 +16,5 @@ install:
   - cinst maven
 
 build_script:
-  - mvn "--version"
+  - cmd: "set"
   - cmd: "mvn clean compile test package"
