@@ -1,6 +1,5 @@
-os:
-  - osx
-jdk:
-  - oraclejdk8
+language: java
+os: osx
+jdk: oraclejdk8
 install:
   - mvn clean compile test package
