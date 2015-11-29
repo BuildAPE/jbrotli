@@ -9,6 +9,14 @@ extern "C" {
 #endif
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
+ * Method:    initIDs
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initIDs
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    initBrotliCompressor
  * Signature: (IIII)I
  */

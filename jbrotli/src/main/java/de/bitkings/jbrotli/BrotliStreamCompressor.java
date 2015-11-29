@@ -6,7 +6,7 @@ import static de.bitkings.jbrotli.BrotliErrorChecker.assertBrotliOk;
 
 public final class BrotliStreamCompressor {
 
-  private long brotliCompressorAddr;
+  private final long brotliCompressorAddr = 0;
 
   public final void init(Brotli.Parameter parameter) {
     assertBrotliOk(initBrotliCompressor(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock()));
@@ -30,6 +30,12 @@ public final class BrotliStreamCompressor {
   public final int compress(ByteBuffer in, int inLength, ByteBuffer out) {
     throw new UnsupportedOperationException("not yet implemented");
   }
+
+  static {
+    initIDs();
+  }
+
+  private native static void initIDs();
 
   private native int initBrotliCompressor(int mode, int quality, int lgwin, int lgblock);
 

@@ -23,6 +23,7 @@ public class BrotliStreamCompressorTest {
   public void setUp() throws Exception {
     compressor = new BrotliStreamCompressor();
     compressor.init(Brotli.DEFAULT_PARAMETER);
+    System.out.println(compressor);
   }
 
   @Test

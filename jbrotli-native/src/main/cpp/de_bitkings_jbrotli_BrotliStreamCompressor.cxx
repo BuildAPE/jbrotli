@@ -44,7 +44,33 @@ typedef long long __int64;
 extern "C" {
 #endif
 
-brotli::BrotliCompressor *compressor;
+/*
+ * Warning free access to pointers stored in Java long fields.
+ */
+#define JNU_GetLongFieldAsPtr(env,obj,id) (jlong_to_ptr((env)->GetLongField((obj),(id))))
+#define JNU_SetLongFieldFromPtr(env,obj,id,val) (env)->SetLongField((obj),(id),ptr_to_jlong(val))
+
+#ifdef _WIN64
+#define jlong_to_ptr(a) ((void*)(a))
+#define ptr_to_jlong(a) ((jlong)(a))
+#else
+/* Double casting to avoid warning messages looking for casting of */
+/* smaller sizes into pointers */
+#define jlong_to_ptr(a) ((void*)(int)(a))
+#define ptr_to_jlong(a) ((jlong)(int)(a))
+#endif
+
+static jfieldID brotliCompressorAddrID;
+
+/*
+ * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
+ * Method:    initIDs
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initIDs(JNIEnv *env,
+                                                                               jclass cls) {
+  brotliCompressorAddrID = env->GetFieldID(cls, "brotliCompressorAddr", "J");
+}
 
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
@@ -63,9 +89,11 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initBrotl
   params.lgwin = lgwin;
   params.lgblock = lgblock;
 
-  //brotli::BrotliCompressor *compressor;
+  brotli::BrotliCompressor *compressor;
   compressor = new brotli::BrotliCompressor(params);
   if (compressor == NULL) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_INIT_BrotliCompressor;
+
+  JNU_SetLongFieldFromPtr(env, thisObj, brotliCompressorAddrID, compressor);
 
   size_t brotli_ring;
   brotli_ring = compressor->input_block_size();
@@ -92,6 +120,8 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
   if (inBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_GetPrimitiveArrayCritical_INBUF;
   uint8_t *outBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(outByteArray, 0);
   if (outBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_GetPrimitiveArrayCritical_OUTBUF;
+
+  brotli::BrotliCompressor *compressor = (brotli::BrotliCompressor*) JNU_GetLongFieldAsPtr(env, thisObj, brotliCompressorAddrID);
 
   size_t output_length;
   uint8_t *brotliOutBufferPtr;
@@ -136,6 +166,8 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
 
   uint8_t *outBufPtr = (uint8_t *) env->GetDirectBufferAddress(outBuf);
   if (outBufPtr == NULL) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF;
+
+  brotli::BrotliCompressor *compressor = (brotli::BrotliCompressor *) JNU_GetLongFieldAsPtr(env, thisObj, brotliCompressorAddrID);
 
   size_t output_length;
   uint8_t *brotliOutBufferPtr;
