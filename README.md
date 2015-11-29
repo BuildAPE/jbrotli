@@ -26,7 +26,7 @@ It was developed by Google and released in September 2015 via this blog post:
 ## Example compression code snippet
 
 ```Java
-System.loadLibrary("brotli");
+NativeLoader.loadLibrary("brotli");
 
 byte[] inBuf = "Brotli: a new compression algorithm for the internet. Now available for Java!".getBytes();
 byte[] compressedBuf = new byte[2048];

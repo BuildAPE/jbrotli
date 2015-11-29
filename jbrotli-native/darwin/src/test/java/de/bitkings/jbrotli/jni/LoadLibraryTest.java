@@ -6,6 +6,6 @@ public class LoadLibraryTest {
 
   @Test
   public void the_library_can_be_loaded() throws Exception {
-    System.loadLibrary("brotli");
+    NativeLoader.loadLibrary("brotli");
   }
 }

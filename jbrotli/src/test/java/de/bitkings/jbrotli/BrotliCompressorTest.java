@@ -1,5 +1,6 @@
 package de.bitkings.jbrotli;
 
+import org.scijava.nativelib.NativeLoader;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -18,7 +19,7 @@ public class BrotliCompressorTest {
 
   @BeforeClass
   public void loadLibrary() throws Exception {
-    System.loadLibrary("brotli");
+    NativeLoader.loadLibrary("brotli");
   }
 
   @BeforeMethod

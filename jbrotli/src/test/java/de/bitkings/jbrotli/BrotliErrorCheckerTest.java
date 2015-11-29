@@ -32,8 +32,8 @@ public class BrotliErrorCheckerTest {
 
   @Test
   public void assertBroltiOk_returns_the_error_code_if_all_ok() throws Exception {
-    int actual = BrotliErrorChecker.assertBrotliOk(42_42);
+    int actual = BrotliErrorChecker.assertBrotliOk(23_42);
 
-    assertThat(actual).isEqualTo(42_42);
+    assertThat(actual).isEqualTo(23_42);
   }
 }

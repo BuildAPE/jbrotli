@@ -1,5 +1,6 @@
 package de.bitkings.jbrotli;
 
+import org.scijava.nativelib.NativeLoader;
 import org.testng.annotations.Test;
 
 public class BrotliExampleTest {
@@ -12,7 +13,7 @@ public class BrotliExampleTest {
   @Test
   public void compress_with_byte_array() throws Exception {
 
-    System.loadLibrary("brotli");
+    NativeLoader.loadLibrary("brotli");
 
     byte[] inBuf = "Brotli: a new compression algorithm for the internet. Now available for Java!".getBytes("ASCII");
     byte[] compressedBuf = new byte[2048];
