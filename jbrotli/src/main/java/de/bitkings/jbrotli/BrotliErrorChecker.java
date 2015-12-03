@@ -40,6 +40,9 @@ public class BrotliErrorChecker {
       case BrotliError.DECOMPRESS_BROTLI_RESULT_NEEDS_MORE_OUTPUT:
       case BrotliError.DECOMPRESS_ByteBuffer_BROTLI_RESULT_NEEDS_MORE_OUTPUT:
         return "Decompression partially done, but must be invoked again with more output." + msg;
+      case BrotliError.STREAM_COMPRESS_WriteBrotliData:
+        return "WriteBrotliData returns false because the size of the input data is larger than " +
+            "input_block_size() or if there was an error during writing the output." + msg;
       default:
         return "Error in native Brotli library." + msg;
     }
