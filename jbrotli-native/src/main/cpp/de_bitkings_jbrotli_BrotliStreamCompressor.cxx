@@ -36,28 +36,13 @@ typedef long long __int64;
 #include <string.h>
 
 #include "../../../../brotli/enc/encode.h"
+#include "./type_converters.h"
 #include "./de_bitkings_jbrotli_BrotliCompressor.h"
 #include "./de_bitkings_jbrotli_BrotliError.h"
 
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-/*
- * Warning free access to pointers stored in Java long fields.
- */
-#define JNU_GetLongFieldAsPtr(env,obj,id) (jlong_to_ptr((env)->GetLongField((obj),(id))))
-#define JNU_SetLongFieldFromPtr(env,obj,id,val) (env)->SetLongField((obj),(id),ptr_to_jlong(val))
-
-#ifdef _WIN64
-#define jlong_to_ptr(a) ((void*)(a))
-#define ptr_to_jlong(a) ((jlong)(a))
-#else
-/* Double casting to avoid warning messages looking for casting of */
-/* smaller sizes into pointers */
-#define jlong_to_ptr(a) ((void*)(int)(a))
-#define ptr_to_jlong(a) ((jlong)(int)(a))
 #endif
 
 static jfieldID brotliCompressorAddrID;
