@@ -94,9 +94,6 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initBrotl
   if (compressor == NULL) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_INIT_BrotliCompressor;
 
   JNU_SetLongFieldFromPtr(env, thisObj, brotliCompressorAddrID, compressor);
-
-  size_t brotli_ring;
-  brotli_ring = compressor->input_block_size();
 }
 
 /*
@@ -123,7 +120,10 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
 
   brotli::BrotliCompressor *compressor = (brotli::BrotliCompressor*) JNU_GetLongFieldAsPtr(env, thisObj, brotliCompressorAddrID);
 
-  size_t output_length;
+  size_t brotli_ring;
+  brotli_ring = compressor->input_block_size();
+
+  size_t output_length = inLen * 2;
   uint8_t *brotliOutBufferPtr;
 
   inBufCritArray += inPos;

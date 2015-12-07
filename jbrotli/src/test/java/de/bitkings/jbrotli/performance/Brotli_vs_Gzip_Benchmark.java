@@ -36,19 +36,19 @@ public class Brotli_vs_Gzip_Benchmark {
   public void init() throws IOException {
     NativeLoader.loadLibrary("brotli");
 
-    brotliParameter = new Brotli.Parameter(Brotli.Mode.GENERIC, 5, Brotli.DEFAULT_PARAMETER_LGWIN, Brotli.DEFAULT_PARAMETER_LGBLOCK);
+    brotliParameter = new Brotli.Parameter(Brotli.Mode.GENERIC, 1, Brotli.DEFAULT_PARAMETER_LGWIN, 16 /*Brotli.DEFAULT_PARAMETER_LGBLOCK*/);
 
     brotliCompressor = new BrotliCompressor();
     brotliStreamCompressor = new BrotliStreamCompressor();
     brotliStreamCompressor.init(brotliParameter);
 
-    out = new byte[24603];
-    outByteBuffer = ByteBuffer.allocateDirect(24603);
-    arrayOutputStream = new ByteArrayOutputStream(24603);
-
     cpHtmlData = loadCanterburyCorpusHtmlFile();
     cpHtmlDataByteBuffer = ByteBuffer.allocateDirect(cpHtmlData.length);
     cpHtmlDataByteBuffer.put(cpHtmlData);
+
+    out = new byte[cpHtmlData.length * 2];
+    outByteBuffer = ByteBuffer.allocateDirect(24603);
+    arrayOutputStream = new ByteArrayOutputStream(24603);
   }
 
   private byte[] loadCanterburyCorpusHtmlFile() throws IOException {
