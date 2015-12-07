@@ -1,5 +1,6 @@
 package de.bitkings.jbrotli.jni;
 
+import org.scijava.nativelib.NativeLoader;
 import org.testng.annotations.Test;
 
 public class LoadLibraryTest {
