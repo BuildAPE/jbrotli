@@ -102,5 +102,5 @@ cd jbrotli-native/linux-x86-64
 mvn install
 cd ../..
 mvn -pl jbrotli package
-java -jar jbrotli\target\jbrotli-0.2.0-SNAPSHOT.jar
+java -jar jbrotli/target/jbrotli-0.2.0-SNAPSHOT.jar
 ```
