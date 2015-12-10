@@ -96,11 +96,12 @@ javah -v -d jbrotli-native/src/main/cpp -classpath jbrotli/target/classes de.bit
 
 ### Run benchmark
 
-Example for Linux 64bit 
+Example for Linux 64bit
 ```bash
 cd jbrotli-native/linux-x86-64
 mvn install
 cd ../..
+mvn -pl jbrotli-native install
 mvn -pl jbrotli package
 java -jar jbrotli/target/jbrotli-0.2.0-SNAPSHOT.jar
 ```
