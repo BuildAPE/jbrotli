@@ -35,20 +35,7 @@
     </profile>
 
     <profile>
-      <id>win32-x86-x64</id>
-      <activation>
-        <os>
-          <family>Windows</family>
-          <arch>x64</arch>
-        </os>
-      </activation>
-      <modules>
-        <module>win32-x86-64</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>win32-x86-amd64</id>
+      <id>win32-x86-64</id>
       <activation>
         <os>
           <family>Windows</family>
@@ -69,6 +56,32 @@
       </activation>
       <modules>
         <module>darwin</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>linux-x86</id>
+      <activation>
+        <os>
+          <family>unix</family>
+          <arch>x86</arch>
+        </os>
+      </activation>
+      <modules>
+        <module>linux-x86</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>linux-x86-64</id>
+      <activation>
+        <os>
+          <family>unix</family>
+          <arch>amd64</arch>
+        </os>
+      </activation>
+      <modules>
+        <module>linux-x86-64</module>
       </modules>
     </profile>
 
