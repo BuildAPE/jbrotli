@@ -1,10 +1,10 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 CURPATH=$(pwd)
 TARGET_CLASSES_PATH="target/classes"
 TARGET_PATH="target"
 
-function exitWithError() {
+exitWithError() {
   cd ${CURPATH}
   echo "*** An error occured. Please check log messages. ***"
   exit $1
