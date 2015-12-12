@@ -36,6 +36,7 @@ typedef long long __int64;
 #include <string.h>
 
 #include "../../../../brotli/enc/encode.h"
+#include "./param_converter.h"
 #include "./de_bitkings_jbrotli_BrotliCompressor.h"
 #include "./de_bitkings_jbrotli_BrotliError.h"
 
@@ -67,11 +68,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
   if (inLen == 0) return 0;
 
   size_t output_length;
-  brotli::BrotliParams params;
-  params.mode = mode;
-  params.quality = quality;
-  params.lgwin = lgwin;
-  params.lgblock = lgblock;
+  brotli::BrotliParams params = mapToBrotliParams(env, mode, quality, lgwin, lgblock);
 
   uint8_t *inBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(inByteArray, 0);
   if (inBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_COMPRESS_GetPrimitiveArrayCritical_INBUF;

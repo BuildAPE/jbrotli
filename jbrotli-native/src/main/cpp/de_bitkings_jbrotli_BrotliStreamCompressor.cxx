@@ -37,6 +37,7 @@ typedef long long __int64;
 
 #include "../../../../brotli/enc/encode.h"
 #include "./type_converters.h"
+#include "./param_converter.h"
 #include "./de_bitkings_jbrotli_BrotliCompressor.h"
 #include "./de_bitkings_jbrotli_BrotliError.h"
 
@@ -68,11 +69,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initBrotl
                                                                                             jint quality,
                                                                                             jint lgwin,
                                                                                             jint lgblock) {
-  brotli::BrotliParams params;
-  params.mode = mode;
-  params.quality = quality;
-  params.lgwin = lgwin;
-  params.lgblock = lgblock;
+  brotli::BrotliParams params = mapToBrotliParams(env, mode, quality, lgwin, lgblock);
 
   brotli::BrotliCompressor *compressor;
   compressor = new brotli::BrotliCompressor(params);
