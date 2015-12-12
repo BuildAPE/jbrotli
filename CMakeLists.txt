@@ -41,9 +41,6 @@ add_library (brotli ${LIB_TYPE} "brotli/enc/backward_references.cc"
 
 SET_TARGET_PROPERTIES(brotli PROPERTIES LINKER_LANGUAGE CXX)
 
-#SET_SOURCE_FILES_PROPERTIES(example.i PROPERTIES CPLUSPLUS 1)
-#SET_SOURCE_FILES_PROPERTIES(example.i PROPERTIES SWIG_FLAGS "-includeall")
-
 set(CMAKE_JNI_TARGET TRUE)
 
 SET(CMAKE_CXX_FLAGS "-std=c++11 -Wall -O3")
