@@ -6,6 +6,10 @@ import static de.bitkings.jbrotli.BrotliErrorChecker.assertBrotliOk;
 
 public final class BrotliStreamCompressor {
 
+  static {
+    initIDs();
+  }
+
   private final long brotliCompressorAddr = 0;
 
   public final void init(Brotli.Parameter parameter) {
@@ -24,15 +28,29 @@ public final class BrotliStreamCompressor {
   }
 
   public final int compress(ByteBuffer in, ByteBuffer out) {
-    throw new UnsupportedOperationException("not yet implemented");
+    return compress(in, in.limit(), out);
   }
 
   public final int compress(ByteBuffer in, int inLength, ByteBuffer out) {
-    throw new UnsupportedOperationException("not yet implemented");
-  }
-
-  static {
-    initIDs();
+    int pos = in.position();
+    int limit = in.limit();
+    assert (pos <= limit);
+    int rem = limit - pos;
+    int outLength;
+    if (rem <= 0)
+      throw new IllegalArgumentException("The source position and length must me smaller then the source ByteBuffer's length.");
+    if (in.isDirect() && out.isDirect()) {
+      outLength = assertBrotliOk(compressByteBuffer(in, in.position(), inLength, out));
+    } else if (in.hasArray() && out.hasArray()) {
+      outLength = assertBrotliOk(compressBytes(in.array(), pos + in.arrayOffset(), rem, out.array()));
+      out.limit(pos + outLength);
+    } else {
+      byte[] b = new byte[rem];
+      in.get(b);
+      outLength = assertBrotliOk(compressBytes(b, 0, b.length, out.array()));
+    }
+    in.position(limit);
+    return outLength;
   }
 
   private native static void initIDs();
