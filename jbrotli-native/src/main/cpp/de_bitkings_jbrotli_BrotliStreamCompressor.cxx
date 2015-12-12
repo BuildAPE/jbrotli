@@ -71,14 +71,13 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initBrotl
                                                                                             jint lgblock) {
   brotli::BrotliParams params = mapToBrotliParams(env, mode, quality, lgwin, lgblock);
 
-  brotli::BrotliCompressor *compressor;
-  compressor = new brotli::BrotliCompressor(params);
-  if (compressor == NULL) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_INIT_BrotliCompressor;
-
+  brotli::BrotliCompressor *compressor = new brotli::BrotliCompressor(params);
   JNU_SetLongFieldFromPtr(env, thisObj, brotliCompressorAddrID, compressor);
 
   size_t brotli_ring;
   brotli_ring = compressor->input_block_size();
+
+  return 0;
 }
 
 /*
