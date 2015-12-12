@@ -12,10 +12,6 @@ endif()
 include_directories(${JNI_INCLUDE_DIRS})
 include_directories(${JNI_LIBRARIES})
 
-# Allow the developer to select if Dynamic or Static libraries are built
-#OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
-# Set the LIB_TYPE variable to STATIC
-#SET (LIB_TYPE STATIC)
 SET (LIB_TYPE SHARED)
 
 add_library (brotli ${LIB_TYPE} "brotli/enc/backward_references.cc"
