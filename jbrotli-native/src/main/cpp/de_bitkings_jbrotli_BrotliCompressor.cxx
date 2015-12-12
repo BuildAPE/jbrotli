@@ -68,7 +68,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
 
   size_t output_length;
   brotli::BrotliParams params;
-  //params.mode = mode;
+  params.mode = mode;
   params.quality = quality;
   params.lgwin = lgwin;
   params.lgblock = lgblock;

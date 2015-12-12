@@ -69,7 +69,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initBrotl
                                                                                             jint lgwin,
                                                                                             jint lgblock) {
   brotli::BrotliParams params;
-  //params.mode = mode;
+  params.mode = mode;
   params.quality = quality;
   params.lgwin = lgwin;
   params.lgblock = lgblock;
