@@ -112,11 +112,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressByteBuf
 
   if (inLen == 0) return 0;
 
-  brotli::BrotliParams params;
-  //params.mode = mode;
-  params.quality = quality;
-  params.lgwin = lgwin;
-  params.lgblock = lgblock;
+  brotli::BrotliParams params = mapToBrotliParams(env, mode, quality, lgwin, lgblock);
 
   uint8_t *inBufPtr = (uint8_t *) env->GetDirectBufferAddress(inBuf);
   if (inBufPtr == NULL) return de_bitkings_jbrotli_BrotliError_COMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF;
