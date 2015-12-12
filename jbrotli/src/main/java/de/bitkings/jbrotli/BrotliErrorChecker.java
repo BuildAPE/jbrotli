@@ -45,6 +45,10 @@ public class BrotliErrorChecker {
             "input_block_size() or if there was an error during writing the output." + msg;
       case BrotliError.STREAM_COMPRESS_INIT_BrotliCompressor:
         return "Error while initializing new BrotliCompressor (native) object." + msg;
+      case BrotliError.COMPRESS_ByteBuffer_BrotliCompressBuffer:
+        return "Error in native Brotli library 'COMPRESS_ByteBuffer_BrotliCompressBuffer'." + msg;
+      case BrotliError.COMPRESS_BrotliCompressBuffer:
+        return "Error in native Brotli library 'COMPRESS_BrotliCompressBuffer'." + msg;
       default:
         return "Error in native Brotli library." + msg;
     }
