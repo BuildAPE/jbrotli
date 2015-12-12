@@ -43,6 +43,8 @@ public class BrotliErrorChecker {
       case BrotliError.STREAM_COMPRESS_WriteBrotliData:
         return "WriteBrotliData returns false because the size of the input data is larger than " +
             "input_block_size() or if there was an error during writing the output." + msg;
+      case BrotliError.STREAM_COMPRESS_INIT_BrotliCompressor:
+        return "Error while initializing new BrotliCompressor (native) object." + msg;
       default:
         return "Error in native Brotli library." + msg;
     }
