@@ -105,3 +105,8 @@ mvn -pl jbrotli-native install
 mvn -pl jbrotli package
 java -jar jbrotli/target/jbrotli-0.2.0-SNAPSHOT.jar
 ```
+
+## Performance benchmark results
+
+Some results are documented in this spreadsheet
+https://docs.google.com/spreadsheets/d/1y3t_NvXrD58tKCXMvNC49EtxBMQQOE_8SPQLS6c1cJo/edit?usp=sharing
