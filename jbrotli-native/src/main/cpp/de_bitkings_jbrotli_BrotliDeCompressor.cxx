@@ -58,6 +58,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
 
   if (inPos < 0 || inLen < 0) {
     env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: input array position and length must be greater than zero.");
+    return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
   }
 
   if (inLen == 0) return 0;
@@ -97,6 +98,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
 
   if (inPos < 0 || inLen < 0) {
     env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: input ByteBuffer position and length must be greater than zero.");
+    return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
   }
 
   if (inLen == 0) return 0;

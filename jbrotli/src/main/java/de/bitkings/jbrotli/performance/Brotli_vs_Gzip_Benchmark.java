@@ -22,7 +22,6 @@ import java.util.zip.GZIPOutputStream;
 @State(Scope.Benchmark)
 public class Brotli_vs_Gzip_Benchmark {
 
-
   private BrotliCompressor brotliCompressor;
   private byte[] cpHtmlData;
   private byte[] out;
@@ -36,7 +35,7 @@ public class Brotli_vs_Gzip_Benchmark {
   public void init() throws IOException {
     NativeLoader.loadLibrary("brotli");
 
-    brotliParameter = new Brotli.Parameter(Brotli.Mode.GENERIC, 5, Brotli.DEFAULT_PARAMETER_LGWIN, Brotli.DEFAULT_PARAMETER_LGBLOCK);
+    brotliParameter = new Brotli.Parameter(Brotli.Mode.GENERIC, 5, Brotli.DEFAULT_LGWIN, Brotli.DEFAULT_LGBLOCK);
 
     brotliCompressor = new BrotliCompressor();
     brotliStreamCompressor = new BrotliStreamCompressor();

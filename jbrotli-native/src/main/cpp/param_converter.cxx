@@ -16,7 +16,7 @@ brotli::BrotliParams mapToBrotliParams(JNIEnv *env, jint mode, jint quality, jin
       params.mode = brotli::BrotliParams::MODE_FONT;
       break;
     default:
-      env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "BrotliParams::Mode is only allowed from 0..2 but was not in this range.");
+      params.mode = brotli::BrotliParams::MODE_GENERIC;
   }
   params.quality = quality;
   params.lgwin = lgwin;

@@ -7,6 +7,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#undef de_bitkings_jbrotli_BrotliError_NATIVE_ERROR
+#define de_bitkings_jbrotli_BrotliError_NATIVE_ERROR -1L
 #undef de_bitkings_jbrotli_BrotliError_COMPRESS_GetPrimitiveArrayCritical_INBUF
 #define de_bitkings_jbrotli_BrotliError_COMPRESS_GetPrimitiveArrayCritical_INBUF -10L
 #undef de_bitkings_jbrotli_BrotliError_COMPRESS_GetPrimitiveArrayCritical_OUTBUF

@@ -65,7 +65,8 @@ public class BrotliCompressorTest {
     // expect exception
   }
 
-  @Test(expectedExceptions = IllegalArgumentException.class)
+  @Test(expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Brotli: input array position and length must be greater than zero.")
   public void compress_with_byte_array_using_negative_length_throws_IllegalArgumentException() throws Exception {
     byte[] out = new byte[2048];
 
@@ -88,7 +89,8 @@ public class BrotliCompressorTest {
     assertThat(buf).startsWith(A_BYTES_COMPRESSED);
   }
 
-  @Test(expectedExceptions = IllegalArgumentException.class, enabled = false) // crashes VM - reason unknown
+  @Test(expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Brotli: input ByteBuffer position and length must be greater than zero.")
   public void compress_with_ByteBuffer_using_negative_length_throws_IllegalArgumentException() throws Exception {
     ByteBuffer inBuffer = ByteBuffer.allocateDirect(A_BYTES.length);
     ByteBuffer outBuffer = ByteBuffer.allocateDirect(A_BYTES_COMPRESSED.length);

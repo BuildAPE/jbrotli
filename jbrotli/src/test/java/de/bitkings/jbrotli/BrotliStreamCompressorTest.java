@@ -93,7 +93,8 @@ public class BrotliStreamCompressorTest {
     assertThat(buf).startsWith(A_BYTES_COMPRESSED);
   }
 
-  @Test(expectedExceptions = IllegalArgumentException.class, enabled = false) // crashes VM - reason unknown
+  @Test(expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Brotli: input ByteBuffer position and length must be greater than zero.")
   public void compress_with_ByteBuffer_using_negative_length_throws_IllegalArgumentException() throws Exception {
     ByteBuffer inBuffer = ByteBuffer.allocateDirect(A_BYTES.length);
     ByteBuffer outBuffer = ByteBuffer.allocateDirect(A_BYTES_COMPRESSED.length);
