@@ -98,29 +98,31 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
 
   if (inLen == 0) return 0;
 
+  brotli::BrotliCompressor *compressor = (brotli::BrotliCompressor*) JNU_GetLongFieldAsPtr(env, thisObj, brotliCompressorInstanceRefID);
+  if (NULL == compressor) {
+    env->ThrowNew(env->FindClass("java/lang/IllegalStateException"), "BrotliStreamCompressor not initialized. Call init() at least once before start compressing.");
+    return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
+  }
+
   uint8_t *inBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(inByteArray, 0);
   if (inBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_GetPrimitiveArrayCritical_INBUF;
-  uint8_t *outBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(outByteArray, 0);
-  if (outBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_GetPrimitiveArrayCritical_OUTBUF;
-
-  brotli::BrotliCompressor *compressor = (brotli::BrotliCompressor*) JNU_GetLongFieldAsPtr(env, thisObj, brotliCompressorInstanceRefID);
+  inBufCritArray += inPos;
+  compressor->CopyInputToRingBuffer(inLen, inBufCritArray);
+  env->ReleasePrimitiveArrayCritical(inByteArray, inBufCritArray, 0);
+  if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ReleasePrimitiveArrayCritical_INBUF;
 
   size_t output_length;
   uint8_t *brotliOutBufferPtr;
-
-  inBufCritArray += inPos;
-  compressor->CopyInputToRingBuffer(inLen, inBufCritArray);
   bool writeResult = compressor->WriteBrotliData(true, false, &output_length, &brotliOutBufferPtr);
   if (!writeResult) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_WriteBrotliData;
 
   if (output_length > 0) {
+    uint8_t *outBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(outByteArray, 0);
+    if (outBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_GetPrimitiveArrayCritical_OUTBUF;
     memcpy(outBufCritArray, brotliOutBufferPtr, output_length);
+    env->ReleasePrimitiveArrayCritical(outByteArray, outBufCritArray, 0);
+    if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ReleasePrimitiveArrayCritical_OUTBUF;
   }
-
-  env->ReleasePrimitiveArrayCritical(outByteArray, outBufCritArray, 0);
-  if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ReleasePrimitiveArrayCritical_OUTBUF;
-  env->ReleasePrimitiveArrayCritical(inByteArray, inBufCritArray, 0);
-  if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ReleasePrimitiveArrayCritical_INBUF;
 
   return output_length;
 }
@@ -144,23 +146,26 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
 
   if (inLen == 0) return 0;
 
-  uint8_t *inBufPtr = (uint8_t *) env->GetDirectBufferAddress(inBuf);
-  if (inBufPtr == NULL) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF;
-
-  uint8_t *outBufPtr = (uint8_t *) env->GetDirectBufferAddress(outBuf);
-  if (outBufPtr == NULL) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF;
-
   brotli::BrotliCompressor *compressor = (brotli::BrotliCompressor *) JNU_GetLongFieldAsPtr(env, thisObj, brotliCompressorInstanceRefID);
+  if (NULL == compressor) {
+    env->ThrowNew(env->FindClass("java/lang/IllegalStateException"), "BrotliStreamCompressor not initialized. Call init() at least once before start compressing.");
+    return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
+  }
+
 
   size_t output_length;
   uint8_t *brotliOutBufferPtr;
 
+  uint8_t *inBufPtr = (uint8_t *) env->GetDirectBufferAddress(inBuf);
+  if (inBufPtr == NULL) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF;
   inBufPtr += inPos;
   compressor->CopyInputToRingBuffer(inLen, inBufPtr);
   bool writeResult = compressor->WriteBrotliData(true, false, &output_length, &brotliOutBufferPtr);
   if (!writeResult) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ByteBuffer_WriteBrotliData;
 
   if (output_length > 0) {
+    uint8_t *outBufPtr = (uint8_t *) env->GetDirectBufferAddress(outBuf);
+    if (outBufPtr == NULL) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF;
     memcpy(outBufPtr, brotliOutBufferPtr, output_length);
   }
 
