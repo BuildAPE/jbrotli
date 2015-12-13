@@ -7,10 +7,10 @@ import static de.bitkings.jbrotli.BrotliErrorChecker.assertBrotliOk;
 public final class BrotliStreamCompressor {
 
   static {
-    initIDs();
+    initJavaFieldIdCache();
   }
 
-  private final long brotliCompressorAddr = 0;
+  private final long brotliCompressorInstanceRef = 0;
 
   public final void init(Brotli.Parameter parameter) {
     assertBrotliOk(initBrotliCompressor(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock()));
@@ -53,7 +53,7 @@ public final class BrotliStreamCompressor {
     return outLength;
   }
 
-  private native static void initIDs();
+  private native static void initJavaFieldIdCache();
 
   private native int initBrotliCompressor(int mode, int quality, int lgwin, int lgblock);
 

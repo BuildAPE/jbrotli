@@ -9,10 +9,10 @@ extern "C" {
 #endif
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
- * Method:    initIDs
+ * Method:    initJavaFieldIdCache
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initIDs
+JNIEXPORT void JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initJavaFieldIdCache
   (JNIEnv *, jclass);
 
 /*
