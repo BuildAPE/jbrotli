@@ -56,21 +56,22 @@ public final class BrotliCompressor {
     if (outRemain <= 0)
       throw new IllegalArgumentException("The destination (out) position must me smaller then the source ByteBuffer's limit.");
 
-    int outLength;
+    int computedOutLength;
     if (in.isDirect() && out.isDirect()) {
-      outLength = assertBrotliOk(compressByteBuffer(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in, inPosition, inRemain, out, outPosition, outRemain));
+      computedOutLength = assertBrotliOk(compressByteBuffer(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in, inPosition, inRemain, out, outPosition, outRemain));
     } else if (in.hasArray() && out.hasArray()) {
-//      outLength = assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in.array(), inPosition + in.arrayOffset(), inRemain, out.array(), outRemain));
-//      out.limit(inPosition + outLength);
+//      computedOutLength = assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in.array(), inPosition + in.arrayOffset(), inRemain, out.array(), outRemain));
+//      out.limit(inPosition + computedOutLength);
       throw new UnsupportedOperationException("Not yet implemented");
     } else {
 //      byte[] b = new byte[inRemain];
 //      in.get(b);
-//      outLength = assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), b, 0, b.length, out.array(), outRemain));
+//      computedOutLength = assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), b, 0, b.length, out.array(), outRemain));
       throw new UnsupportedOperationException("Not yet implemented");
     }
     in.position(inLimit);
-    return outLength;
+    out.limit(outPosition + computedOutLength);
+    return computedOutLength;
   }
 
   private native static int compressBytes(int mode, int quality, int lgwin, int lgblock, byte[] inArray, int inPosition, int inLength, byte[] outArray, int outLength);
