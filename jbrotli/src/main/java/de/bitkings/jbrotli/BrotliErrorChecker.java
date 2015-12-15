@@ -10,15 +10,13 @@ public class BrotliErrorChecker {
   }
 
   /**
-   * @param errorCode errorCode
+   * @param errorCodeOrSizeInformation error code or size information
    * @throws BrotliException in case of errors
    */
-  public static int assertBrotliOk(int errorCode) throws BrotliException {
-    String msg = resolveErrorCode2Message(errorCode);
-    if (msg != null) {
-      throw new BrotliException(msg);
-    }
-    return errorCode;
+  public static int assertBrotliOk(int errorCodeOrSizeInformation) throws BrotliException {
+    if (!isBrotliOk(errorCodeOrSizeInformation))
+      throw new BrotliException(resolveErrorCode2Message(errorCodeOrSizeInformation));
+    return errorCodeOrSizeInformation;
   }
 
   /**
