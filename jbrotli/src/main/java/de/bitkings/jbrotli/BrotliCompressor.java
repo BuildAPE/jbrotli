@@ -30,10 +30,13 @@ public final class BrotliCompressor {
     if (inPosition + inLength > in.length) {
       throw new IllegalArgumentException("The source position and length must me smaller then the source byte array's length.");
     }
-    return assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in, inPosition, inLength, out));
+    return assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in, inPosition, inLength, out, out.length));
   }
 
   /**
+   * One may use {@link ByteBuffer#position(int)} and {@link ByteBuffer#limit(int)} to adjust
+   * how the buffers are used for reading and writing.
+   *
    * @param parameter parameter
    * @param in        input
    * @param out       output
@@ -41,41 +44,37 @@ public final class BrotliCompressor {
    * @throws BrotliException
    */
   public final int compress(Brotli.Parameter parameter, ByteBuffer in, ByteBuffer out) throws BrotliException {
-    return compress(parameter, in, in.limit(), out);
-  }
+    int inPosition = in.position();
+    int inLimit = in.limit();
+    int inRemain = inLimit - inPosition;
+    if (inRemain <= 0)
+      throw new IllegalArgumentException("The source (in) position and length must me smaller then the source ByteBuffer's length.");
 
-  /**
-   * @param parameter  parameter
-   * @param in         input
-   * @param inLength   input length
-   * @param out        output
-   * @return output buffer length
-   * @throws BrotliException
-   */
-  public final int compress(Brotli.Parameter parameter, ByteBuffer in, int inLength, ByteBuffer out) throws BrotliException {
-    int pos = in.position();
-    int limit = in.limit();
-    assert (pos <= limit);
-    int rem = limit - pos;
+    int outPosition = out.position();
+    int outLimit = out.limit();
+    int outRemain = outLimit - outPosition;
+    if (outRemain <= 0)
+      throw new IllegalArgumentException("The destination (out) position and length must me smaller then the source ByteBuffer's length.");
+
     int outLength;
-    if (rem <= 0)
-      throw new IllegalArgumentException("The source position and length must me smaller then the source ByteBuffer's length.");
     if (in.isDirect() && out.isDirect()) {
-      outLength = assertBrotliOk(compressByteBuffer(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in, in.position(), inLength, out));
+      outLength = assertBrotliOk(compressByteBuffer(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in, inPosition, inRemain, out, outPosition, outRemain));
     } else if (in.hasArray() && out.hasArray()) {
-      outLength = assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in.array(), pos + in.arrayOffset(), rem, out.array()));
-      out.limit(pos + outLength);
+//      outLength = assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in.array(), inPosition + in.arrayOffset(), inRemain, out.array(), outRemain));
+//      out.limit(inPosition + outLength);
+      throw new UnsupportedOperationException("Not yet implemented");
     } else {
-      byte[] b = new byte[rem];
-      in.get(b);
-      outLength = assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), b, 0, b.length, out.array()));
+//      byte[] b = new byte[inRemain];
+//      in.get(b);
+//      outLength = assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), b, 0, b.length, out.array(), outRemain));
+      throw new UnsupportedOperationException("Not yet implemented");
     }
-    in.position(limit);
+    in.position(inLimit);
     return outLength;
   }
 
-  private native static int compressBytes(int mode, int quality, int lgwin, int lgblock, byte[] inArray, int inPosition, int inLength, byte[] outArray);
+  private native static int compressBytes(int mode, int quality, int lgwin, int lgblock, byte[] inArray, int inPosition, int inLength, byte[] outArray, int outLength);
 
-  private native static int compressByteBuffer(int mode, int quality, int lgwin, int lgblock, ByteBuffer inByteBuffer, int inPosition, int inLength, ByteBuffer outByteBuffer);
+  private native static int compressByteBuffer(int mode, int quality, int lgwin, int lgblock, ByteBuffer inByteBuffer, int inPosition, int inLength, ByteBuffer outByteBuffer, int outPosition, int outLength);
 
 }

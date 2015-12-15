@@ -10,18 +10,18 @@ extern "C" {
 /*
  * Class:     de_bitkings_jbrotli_BrotliCompressor
  * Method:    compressBytes
- * Signature: (IIII[BII[B)I
+ * Signature: (IIII[BII[BI)I
  */
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes
-  (JNIEnv *, jclass, jint, jint, jint, jint, jbyteArray, jint, jint, jbyteArray);
+  (JNIEnv *, jclass, jint, jint, jint, jint, jbyteArray, jint, jint, jbyteArray, jint);
 
 /*
  * Class:     de_bitkings_jbrotli_BrotliCompressor
  * Method:    compressByteBuffer
- * Signature: (IIIILjava/nio/ByteBuffer;IILjava/nio/ByteBuffer;)I
+ * Signature: (IIIILjava/nio/ByteBuffer;IILjava/nio/ByteBuffer;II)I
  */
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressByteBuffer
-  (JNIEnv *, jclass, jint, jint, jint, jint, jobject, jint, jint, jobject);
+  (JNIEnv *, jclass, jint, jint, jint, jint, jobject, jint, jint, jobject, jint, jint);
 
 #ifdef __cplusplus
 }
