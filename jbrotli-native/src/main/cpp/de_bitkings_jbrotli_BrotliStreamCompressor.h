@@ -17,6 +17,14 @@ JNIEXPORT void JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initJavaF
 
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
+ * Method:    getInputBlockSize
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_getInputBlockSize
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    initBrotliCompressor
  * Signature: (IIII)I
  */
@@ -26,18 +34,18 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initBrotl
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    compressBytes
- * Signature: ([BII[B)I
+ * Signature: ([BII[BI)I
  */
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressBytes
-  (JNIEnv *, jobject, jbyteArray, jint, jint, jbyteArray);
+  (JNIEnv *, jobject, jbyteArray, jint, jint, jbyteArray, jint);
 
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    compressByteBuffer
- * Signature: (Ljava/nio/ByteBuffer;IILjava/nio/ByteBuffer;)I
+ * Signature: (Ljava/nio/ByteBuffer;IIZ)Ljava/nio/ByteBuffer;
  */
-JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressByteBuffer
-  (JNIEnv *, jobject, jobject, jint, jint, jobject);
+JNIEXPORT jobject JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressByteBuffer
+  (JNIEnv *, jobject, jobject, jint, jint, jboolean);
 
 #ifdef __cplusplus
 }

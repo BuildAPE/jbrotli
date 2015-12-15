@@ -6,10 +6,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
-import static de.bitkings.jbrotli.BrotliCompressorTest.A_BYTES;
-import static de.bitkings.jbrotli.BrotliCompressorTest.A_BYTES_COMPRESSED;
+import static de.bitkings.jbrotli.BrotliCompressorTest.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BrotliStreamCompressorTest {
@@ -25,6 +23,20 @@ public class BrotliStreamCompressorTest {
   public void setUp() throws Exception {
     compressor = new BrotliStreamCompressor();
     compressor.init(Brotli.DEFAULT_PARAMETER);
+  }
+
+  @Test
+  public void max_input_buffer_size_can_be_retrieved() throws Exception {
+    Brotli.Parameter parameter = Brotli.DEFAULT_PARAMETER;
+    parameter.setLgblock(16);
+
+    compressor = new BrotliStreamCompressor();
+    compressor.init(parameter);
+
+    int maxInputBufferSize = compressor.getMaxInputBufferSize();
+
+    int computed_input_block_size_as_in_botli_encode_header_file = 1 << 16;
+    assertThat(maxInputBufferSize).isEqualTo(computed_input_block_size_as_in_botli_encode_header_file);
   }
 
   @Test
@@ -59,8 +71,7 @@ public class BrotliStreamCompressorTest {
   @Test
   public void compress_with_byte_array_using_position_and_length() throws Exception {
     // setup
-    byte[] in = new byte[100];
-    Arrays.fill(in, (byte) 'x');
+    byte[] in = createFilledByteArray(100, 'x');
     byte[] out = new byte[2048];
 
     // given
@@ -80,51 +91,63 @@ public class BrotliStreamCompressorTest {
   // *** ByteBuffer **********
 
   @Test
-  public void compress_with_ByteBuffer() throws Exception {
+  public void compress_with_ByteBuffer_and_flushing() throws Exception {
     ByteBuffer inBuffer = ByteBuffer.allocateDirect(A_BYTES.length);
     inBuffer.put(A_BYTES);
     inBuffer.position(0);
-    ByteBuffer outBuffer = ByteBuffer.allocateDirect(10);
-    int outLength = compressor.compress(inBuffer, outBuffer);
 
-    assertThat(outLength).isEqualTo(10);
-    byte[] buf = new byte[10];
+    // when
+    ByteBuffer outBuffer = compressor.compress(inBuffer, true);
+
+    assertThat(outBuffer.capacity()).isEqualTo(A_BYTES_COMPRESSED.length);
+    byte[] buf = new byte[A_BYTES_COMPRESSED.length];
     outBuffer.get(buf);
     assertThat(buf).startsWith(A_BYTES_COMPRESSED);
   }
 
-  @Test(expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "Brotli: input ByteBuffer position and length must be greater than zero.")
-  public void compress_with_ByteBuffer_using_negative_length_throws_IllegalArgumentException() throws Exception {
+  @Test
+  public void compress_with_ByteBuffer_without_flushing() throws Exception {
     ByteBuffer inBuffer = ByteBuffer.allocateDirect(A_BYTES.length);
-    ByteBuffer outBuffer = ByteBuffer.allocateDirect(A_BYTES_COMPRESSED.length);
+    inBuffer.put(A_BYTES);
+    inBuffer.position(0);
 
-    compressor.compress(inBuffer, -1, outBuffer);
+    // when
+    ByteBuffer outBuffer = compressor.compress(inBuffer, false);
+    // then
+    assertThat(outBuffer.capacity()).isEqualTo(0);
 
-    // expect exception
+    // when
+    outBuffer = compressor.compress(ByteBuffer.allocateDirect(0), true);
+    // then
+    assertThat(outBuffer.capacity()).isEqualTo(A_BYTES_COMPRESSED.length);
+
+    // then
+    byte[] buf = new byte[A_BYTES_COMPRESSED.length];
+    outBuffer.get(buf);
+    assertThat(buf).startsWith(A_BYTES_COMPRESSED);
   }
 
   @Test
   public void compress_with_ByteBuffer_using_position_and_length() throws Exception {
     // setup
-    byte[] tmpBuf = new byte[100];
-    Arrays.fill(tmpBuf, (byte) 'x');
-    ByteBuffer inBuffer = ByteBuffer.allocateDirect(tmpBuf.length);
-    ByteBuffer outBuffer = ByteBuffer.allocateDirect(A_BYTES_COMPRESSED.length);
-    inBuffer.put(tmpBuf);
+    ByteBuffer inBuffer = ByteBuffer.allocateDirect(100);
+    inBuffer.put(createFilledByteArray(100, 'x'));
 
     // given
     int testPosition = 23;
-    int testLength = A_BYTES.length;
     inBuffer.position(testPosition);
     inBuffer.put(A_BYTES);
     inBuffer.position(testPosition);
+    inBuffer.limit(testPosition + A_BYTES.length);
 
     // when
-    int outLength = compressor.compress(inBuffer, testLength, outBuffer);
+    ByteBuffer outBuffer = compressor.compress(inBuffer, true);
 
     // then
-    assertThat(outLength).isEqualTo(A_BYTES_COMPRESSED.length);
+    assertThat(outBuffer.capacity()).isEqualTo(A_BYTES_COMPRESSED.length);
+    assertThat(outBuffer.limit()).isEqualTo(A_BYTES_COMPRESSED.length);
+    assertThat(outBuffer.position()).isEqualTo(0);
+    // then
     byte[] buf = new byte[A_BYTES_COMPRESSED.length];
     outBuffer.get(buf);
     assertThat(buf).startsWith(A_BYTES_COMPRESSED);
