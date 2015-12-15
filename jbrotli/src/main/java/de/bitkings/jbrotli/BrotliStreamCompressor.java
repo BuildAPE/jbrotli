@@ -16,6 +16,11 @@ public final class BrotliStreamCompressor {
     assertBrotliOk(initBrotliCompressor(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock()));
   }
 
+  public final boolean isInitialized() {
+    // will be set within native code
+    return brotliCompressorInstanceRef != 0;
+  }
+
   public final int compress(byte[] in, byte[] out) {
     return compress(in, 0, in.length, out);
   }
