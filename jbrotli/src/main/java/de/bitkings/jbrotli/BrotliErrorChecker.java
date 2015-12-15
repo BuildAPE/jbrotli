@@ -48,7 +48,7 @@ public class BrotliErrorChecker {
       case BrotliError.COMPRESS_ByteBuffer_BrotliCompressBuffer:
         return "Error in native Brotli library 'COMPRESS_ByteBuffer_BrotliCompressBuffer'." + msg;
       case BrotliError.COMPRESS_BrotliCompressBuffer:
-        return "Error in native Brotli library 'COMPRESS_BrotliCompressBuffer'." + msg;
+        return "Error in native Brotli library 'COMPRESS_BrotliCompressBuffer'. Most likely, your compress buffer (output) is too small, please make it larger. " + msg;
       case BrotliError.COMPRESS_GetPrimitiveArrayCritical_INBUF:
         return "Error in native Brotli library 'COMPRESS_GetPrimitiveArrayCritical_INBUF'." + msg;
       case BrotliError.COMPRESS_GetPrimitiveArrayCritical_OUTBUF:
