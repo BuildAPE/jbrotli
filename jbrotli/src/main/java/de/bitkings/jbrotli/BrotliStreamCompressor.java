@@ -42,12 +42,14 @@ public final class BrotliStreamCompressor {
     if (in.isDirect() && out.isDirect()) {
       outLength = assertBrotliOk(compressByteBuffer(in, in.position(), inLength, out));
     } else if (in.hasArray() && out.hasArray()) {
-      outLength = assertBrotliOk(compressBytes(in.array(), pos + in.arrayOffset(), rem, out.array()));
-      out.limit(pos + outLength);
+//      outLength = assertBrotliOk(compressBytes(in.array(), pos + in.arrayOffset(), rem, out.array()));
+//      out.limit(pos + outLength);
+      throw new UnsupportedOperationException("Not yet implemented");
     } else {
-      byte[] b = new byte[rem];
-      in.get(b);
-      outLength = assertBrotliOk(compressBytes(b, 0, b.length, out.array()));
+//      byte[] b = new byte[rem];
+//      in.get(b);
+//      outLength = assertBrotliOk(compressBytes(b, 0, b.length, out.array()));
+      throw new UnsupportedOperationException("Not yet implemented");
     }
     in.position(limit);
     return outLength;
