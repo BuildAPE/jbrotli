@@ -28,36 +28,34 @@ public final class BrotliDeCompressor {
     if (inPosition + inLength > in.length) {
       throw new IllegalArgumentException("The source position and length must me smaller then the source byte array's length.");
     }
-    return assertBrotliOk(deCompressBytes(in, inPosition, inLength, out));
+    return assertBrotliOk(deCompressBytes(in, inPosition, inLength, out, out.length));
   }
 
   /**
+   * One may use {@link ByteBuffer#position(int)} and {@link ByteBuffer#limit(int)} to adjust
+   * how the buffers are used for reading and writing.
+   *
    * @param in  compressed input
    * @param out output buffer
    * @return output buffer length
    * @throws BrotliException
    */
   public final int deCompress(ByteBuffer in, ByteBuffer out) throws BrotliException {
-    return deCompress(in, in.limit(), out);
-  }
+    int inPosition = in.position();
+    int inLimit = in.limit();
+    int inRemain = inLimit - inPosition;
+    if (inRemain <= 0)
+      throw new IllegalArgumentException("The source (in) position must me smaller then the source ByteBuffer's limit.");
 
-  /**
-   * @param in         compressed input
-   * @param inLength   input length
-   * @param out        output buffer
-   * @return output buffer length
-   * @throws BrotliException
-   */
-  public final int deCompress(ByteBuffer in, int inLength, ByteBuffer out) throws BrotliException {
-    int pos = in.position();
-    int limit = in.limit();
-    assert (pos <= limit);
-    int rem = limit - pos;
+    int outPosition = out.position();
+    int outLimit = out.limit();
+    int outRemain = outLimit - outPosition;
+    if (outRemain <= 0)
+      throw new IllegalArgumentException("The destination (out) position must me smaller then the source ByteBuffer's limit.");
+
     int outLength;
-    if (rem <= 0)
-      return -1;
     if (in.isDirect() && out.isDirect()) {
-      outLength = assertBrotliOk(deCompressByteBuffer(in, in.position(), inLength, out));
+      outLength = assertBrotliOk(deCompressByteBuffer(in, inPosition, inRemain, out, outPosition, outRemain));
     } else if (in.hasArray() && out.hasArray()) {
 //      outLength = assertBrotliOk(deCompressBytes(in.array(), pos + in.arrayOffset(), rem, out.array()));
 //      out.limit(pos + outLength);
@@ -68,12 +66,13 @@ public final class BrotliDeCompressor {
 //      outLength = assertBrotliOk(deCompressBytes(b, 0, b.length, out.array()));
       throw new UnsupportedOperationException("Not yet implemented");
     }
-    in.position(limit);
+    in.position(inLimit);
+    out.limit(outPosition + outLength);
     return outLength;
   }
 
-  private native static int deCompressBytes(byte[] in, int inPosition, int inLength, byte[] out);
+  private native static int deCompressBytes(byte[] in, int inPosition, int inLength, byte[] out, int outLength);
 
-  private native static int deCompressByteBuffer(ByteBuffer inBuf, int inPosition, int inLength, ByteBuffer outBuf);
+  private native static int deCompressByteBuffer(ByteBuffer inBuf, int inPosition, int inLength, ByteBuffer outBuf, int outPosition, int outLength);
 
 }

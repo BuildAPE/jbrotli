@@ -48,13 +48,13 @@ public final class BrotliCompressor {
     int inLimit = in.limit();
     int inRemain = inLimit - inPosition;
     if (inRemain <= 0)
-      throw new IllegalArgumentException("The source (in) position and length must me smaller then the source ByteBuffer's length.");
+      throw new IllegalArgumentException("The source (in) position must me smaller then the source ByteBuffer's limit.");
 
     int outPosition = out.position();
     int outLimit = out.limit();
     int outRemain = outLimit - outPosition;
     if (outRemain <= 0)
-      throw new IllegalArgumentException("The destination (out) position and length must me smaller then the source ByteBuffer's length.");
+      throw new IllegalArgumentException("The destination (out) position must me smaller then the source ByteBuffer's limit.");
 
     int outLength;
     if (in.isDirect() && out.isDirect()) {

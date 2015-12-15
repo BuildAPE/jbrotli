@@ -82,7 +82,9 @@ public class BrotliCompressorTest {
     ByteBuffer outBuffer = ByteBuffer.allocateDirect(10);
     int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuffer, outBuffer);
 
+    // then
     assertThat(outLength).isEqualTo(10);
+    // then
     byte[] buf = new byte[10];
     outBuffer.get(buf);
     assertThat(buf).startsWith(A_BYTES_COMPRESSED);
@@ -106,8 +108,11 @@ public class BrotliCompressorTest {
     int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuffer, outBuffer);
 
     // then
-    assertThat(outBuffer.limit()).isEqualTo(outLength);
     assertThat(outLength).isEqualTo(A_BYTES_COMPRESSED.length);
+    assertThat(outBuffer.position()).isEqualTo(0);
+    assertThat(outBuffer.limit()).isEqualTo(outLength);
+    assertThat(inBuffer.position()).isEqualTo(testPosition + A_BYTES.length);
+    // then
     byte[] buf = new byte[A_BYTES_COMPRESSED.length];
     outBuffer.get(buf);
     assertThat(buf).startsWith(A_BYTES_COMPRESSED);
@@ -130,14 +135,17 @@ public class BrotliCompressorTest {
     int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuffer, outBuffer);
 
     // then
-    assertThat(outBuffer.limit()).isEqualTo(testPosition + outLength);
     assertThat(outLength).isEqualTo(A_BYTES_COMPRESSED.length);
+    assertThat(outBuffer.position()).isEqualTo(testPosition);
+    assertThat(outBuffer.limit()).isEqualTo(testPosition + outLength);
+    assertThat(inBuffer.position()).isEqualTo(A_BYTES.length);
+    // then
     byte[] buf = new byte[A_BYTES_COMPRESSED.length];
     outBuffer.get(buf);
     assertThat(buf).startsWith(A_BYTES_COMPRESSED);
   }
 
-  private byte[] createFilledByteArray(int len, char fillChar) {
+  static byte[] createFilledByteArray(int len, char fillChar) {
     byte[] tmpXXX = new byte[len];
     Arrays.fill(tmpXXX, (byte) fillChar);
     return tmpXXX;

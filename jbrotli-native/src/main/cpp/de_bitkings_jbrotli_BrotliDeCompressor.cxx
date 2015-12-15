@@ -47,30 +47,31 @@ extern "C" {
 /*
  * Class:     de_bitkings_jbrotli_BrotliDeCompressor
  * Method:    deCompressBytes
- * Signature: ([BII[B)I
+ * Signature: ([BII[BI)I
  */
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressBytes(JNIEnv *env,
                                                                                    jclass thisObj,
                                                                                    jbyteArray encodedByteArray,
-                                                                                   jint inPos,
-                                                                                   jint inLen,
-                                                                                   jbyteArray outByteArray) {
+                                                                                   jint inPosition,
+                                                                                   jint inLength,
+                                                                                   jbyteArray outByteArray,
+                                                                                   jint outLength) {
 
-  if (inPos < 0 || inLen < 0) {
+  if (inPosition < 0 || inLength < 0) {
     env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: input array position and length must be greater than zero.");
     return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
   }
 
-  if (inLen == 0) return 0;
+  if (inLength == 0) return 0;
 
   uint8_t *encodedBuffer = (uint8_t *) env->GetPrimitiveArrayCritical(encodedByteArray, 0);
   if (encodedBuffer == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_GetPrimitiveArrayCritical_INBUF;
   uint8_t *outBuffer = (uint8_t *) env->GetPrimitiveArrayCritical(outByteArray, 0);
   if (outBuffer == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_GetPrimitiveArrayCritical_OUTBUF;
 
-  size_t output_length;
-  encodedBuffer += inPos;
-  BrotliResult brotliResult = BrotliDecompressBuffer(inLen, encodedBuffer, &output_length, outBuffer);
+  size_t computedOutLength;
+  encodedBuffer += inPosition;
+  BrotliResult brotliResult = BrotliDecompressBuffer(inLength, encodedBuffer, &computedOutLength, outBuffer);
 
   if (brotliResult == BROTLI_RESULT_ERROR) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_BROTLI_RESULT_ERROR;
   if (brotliResult == BROTLI_RESULT_NEEDS_MORE_INPUT) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_BROTLI_RESULT_NEEDS_MORE_INPUT;
@@ -81,27 +82,33 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
   env->ReleasePrimitiveArrayCritical(encodedByteArray, encodedBuffer, 0);
   if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ReleasePrimitiveArrayCritical_INBUF;
 
-  return output_length;
+  return computedOutLength;
 }
 
 /*
  * Class:     de_bitkings_jbrotli_BrotliDeCompressor
  * Method:    deCompressByteBuffer
- * Signature: (Ljava/nio/ByteBuffer;IILjava/nio/ByteBuffer;)I
+ * Signature: (Ljava/nio/ByteBuffer;IILjava/nio/ByteBuffer;II)I
  */
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByteBuffer(JNIEnv *env,
                                                                                         jclass thisObj,
                                                                                         jobject inBuf,
-                                                                                        jint inPos,
-                                                                                        jint inLen,
-                                                                                        jobject outBuf) {
+                                                                                        jint inPosition,
+                                                                                        jint inLength,
+                                                                                        jobject outBuf,
+                                                                                        jint outPosition,
+                                                                                        jint outLength) {
 
-  if (inPos < 0 || inLen < 0) {
+  if (inPosition < 0 || inLength < 0) {
     env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: input ByteBuffer position and length must be greater than zero.");
     return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
   }
+  if (outPosition < 0 || outLength < 0) {
+    env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: output ByteBuffer position and length must be greater than zero.");
+    return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
+  }
 
-  if (inLen == 0) return 0;
+  if (inLength == 0) return 0;
 
   uint8_t *inBufPtr = (uint8_t *)env->GetDirectBufferAddress(inBuf);
   if (inBufPtr==NULL) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF;
@@ -109,15 +116,16 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
   uint8_t *outBufPtr = (uint8_t *)env->GetDirectBufferAddress(outBuf);
   if (outBufPtr==NULL) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF;
 
-  size_t output_length;
-  inBufPtr += inPos;
-  BrotliResult brotliResult = BrotliDecompressBuffer(inLen, inBufPtr, &output_length, outBufPtr);
+  size_t computedOutLength = outLength;
+  inBufPtr += inPosition;
+  outBufPtr += outPosition;
+  BrotliResult brotliResult = BrotliDecompressBuffer(inLength, inBufPtr, &computedOutLength, outBufPtr);
 
   if (brotliResult == BROTLI_RESULT_ERROR) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ByteBuffer_BROTLI_RESULT_ERROR;
   if (brotliResult == BROTLI_RESULT_NEEDS_MORE_INPUT) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ByteBuffer_BROTLI_RESULT_NEEDS_MORE_INPUT;
   if (brotliResult == BROTLI_RESULT_NEEDS_MORE_OUTPUT) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ByteBuffer_BROTLI_RESULT_NEEDS_MORE_OUTPUT;
 
-  return output_length;
+  return computedOutLength;
 }
 
 #ifdef __cplusplus

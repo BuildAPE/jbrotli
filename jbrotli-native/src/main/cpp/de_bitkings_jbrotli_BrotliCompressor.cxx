@@ -69,7 +69,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
 
   if (inLength == 0) return 0;
 
-  size_t output_length = outLength;
+  size_t computedOutLength = outLength;
   brotli::BrotliParams params = mapToBrotliParams(env, mode, quality, lgwin, lgblock);
 
   uint8_t *inBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(inByteArray, 0);
@@ -78,7 +78,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
   if (outBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_COMPRESS_GetPrimitiveArrayCritical_OUTBUF;
 
   inBufCritArray += inPos;
-  int ok = brotli::BrotliCompressBuffer(params, inLength, inBufCritArray, &output_length, outBufCritArray);
+  int ok = brotli::BrotliCompressBuffer(params, inLength, inBufCritArray, &computedOutLength, outBufCritArray);
 
   env->ReleasePrimitiveArrayCritical(outByteArray, outBufCritArray, 0);
   if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_COMPRESS_ReleasePrimitiveArrayCritical_OUTBUF;
@@ -89,7 +89,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
     return de_bitkings_jbrotli_BrotliError_COMPRESS_BrotliCompressBuffer;
   }
 
-  return output_length;
+  return computedOutLength;
 }
 
 /*
@@ -129,15 +129,15 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressByteBuf
   uint8_t *outBufPtr = (uint8_t *) env->GetDirectBufferAddress(outBuf);
   if (outBufPtr == NULL) return de_bitkings_jbrotli_BrotliError_COMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF;
 
-  size_t output_length = outLength;
+  size_t computedOutLength = outLength;
   inBufPtr += inPosition;
   outBufPtr += outPosition;
-  int ok = brotli::BrotliCompressBuffer(params, inLength, inBufPtr, &output_length, outBufPtr);
+  int ok = brotli::BrotliCompressBuffer(params, inLength, inBufPtr, &computedOutLength, outBufPtr);
   if (!ok) {
     return de_bitkings_jbrotli_BrotliError_COMPRESS_ByteBuffer_BrotliCompressBuffer;
   }
 
-  return output_length;
+  return computedOutLength;
 }
 
 #ifdef __cplusplus
