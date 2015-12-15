@@ -29,7 +29,7 @@ public class BrotliErrorChecker {
     if (isBrotliOk(errorCode)) return null;
     String msg = " (Error code: " + errorCode + ")";
     switch (errorCode) {
-      case -1:
+      case BrotliError.NATIVE_ERROR:
         return "An error happened inside JNI function call. Maybe OOME or other issues." + msg;
       case BrotliError.DECOMPRESS_BROTLI_RESULT_ERROR:
       case BrotliError.DECOMPRESS_ByteBuffer_BROTLI_RESULT_ERROR:
@@ -49,6 +49,44 @@ public class BrotliErrorChecker {
         return "Error in native Brotli library 'COMPRESS_ByteBuffer_BrotliCompressBuffer'." + msg;
       case BrotliError.COMPRESS_BrotliCompressBuffer:
         return "Error in native Brotli library 'COMPRESS_BrotliCompressBuffer'." + msg;
+      case BrotliError.COMPRESS_GetPrimitiveArrayCritical_INBUF:
+        return "Error in native Brotli library 'COMPRESS_GetPrimitiveArrayCritical_INBUF'." + msg;
+      case BrotliError.COMPRESS_GetPrimitiveArrayCritical_OUTBUF:
+        return "Error in native Brotli library 'COMPRESS_GetPrimitiveArrayCritical_OUTBUF'." + msg;
+      case BrotliError.COMPRESS_ReleasePrimitiveArrayCritical_OUTBUF:
+        return "Error in native Brotli library 'COMPRESS_ReleasePrimitiveArrayCritical_OUTBUF'." + msg;
+      case BrotliError.COMPRESS_ReleasePrimitiveArrayCritical_INBUF:
+        return "Error in native Brotli library 'COMPRESS_ReleasePrimitiveArrayCritical_INBUF'." + msg;
+      case BrotliError.COMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF:
+        return "Error in native Brotli library 'COMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF'." + msg;
+      case BrotliError.COMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF:
+        return "Error in native Brotli library 'COMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF'." + msg;
+      case BrotliError.DECOMPRESS_GetPrimitiveArrayCritical_INBUF:
+        return "Error in native Brotli library 'DECOMPRESS_GetPrimitiveArrayCritical_INBUF'." + msg;
+      case BrotliError.DECOMPRESS_GetPrimitiveArrayCritical_OUTBUF:
+        return "Error in native Brotli library 'DECOMPRESS_GetPrimitiveArrayCritical_OUTBUF'." + msg;
+      case BrotliError.DECOMPRESS_ReleasePrimitiveArrayCritical_OUTBUF:
+        return "Error in native Brotli library 'DECOMPRESS_ReleasePrimitiveArrayCritical_OUTBUF'." + msg;
+      case BrotliError.DECOMPRESS_ReleasePrimitiveArrayCritical_INBUF:
+        return "Error in native Brotli library 'DECOMPRESS_ReleasePrimitiveArrayCritical_INBUF'." + msg;
+      case BrotliError.DECOMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF:
+        return "Error in native Brotli library 'DECOMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF'." + msg;
+      case BrotliError.DECOMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF:
+        return "Error in native Brotli library 'DECOMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF'." + msg;
+      case BrotliError.STREAM_COMPRESS_GetPrimitiveArrayCritical_INBUF:
+        return "Error in native Brotli library 'STREAM_COMPRESS_GetPrimitiveArrayCritical_INBUF'." + msg;
+      case BrotliError.STREAM_COMPRESS_GetPrimitiveArrayCritical_OUTBUF:
+        return "Error in native Brotli library 'STREAM_COMPRESS_GetPrimitiveArrayCritical_OUTBUF'." + msg;
+      case BrotliError.STREAM_COMPRESS_ReleasePrimitiveArrayCritical_OUTBUF:
+        return "Error in native Brotli library 'STREAM_COMPRESS_ReleasePrimitiveArrayCritical_OUTBUF'." + msg;
+      case BrotliError.STREAM_COMPRESS_ReleasePrimitiveArrayCritical_INBUF:
+        return "Error in native Brotli library 'STREAM_COMPRESS_ReleasePrimitiveArrayCritical_INBUF'." + msg;
+      case BrotliError.STREAM_COMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF:
+        return "Error in native Brotli library 'STREAM_COMPRESS_ByteBuffer_GetDirectBufferAddress_INBUF'." + msg;
+      case BrotliError.STREAM_COMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF:
+        return "Error in native Brotli library 'STREAM_COMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF'." + msg;
+      case BrotliError.STREAM_COMPRESS_ByteBuffer_WriteBrotliData:
+        return "Error in native Brotli library 'STREAM_COMPRESS_ByteBuffer_WriteBrotliData'." + msg;
       default:
         return "Error in native Brotli library." + msg;
     }
