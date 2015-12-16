@@ -45,16 +45,23 @@ int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuf, compressedB
 
 #### Supported platforms and architecture
 
-As this project is under development, currently the following platforms and architectures are supported
+As this project is under development.
+The goal is to provide native libraries for Linux, Windows and OSX in 32bit and 64bit. 
+Currently the following platforms and architectures are tested:
 
 * Windows 10, 64bit
    * compiler tool chains
       * [ok] NMake 32bit+64bit
-      * [most likely] MS Visual Studio 2010 32bit+64bit
+      * [ok] MS Visual Studio 2010 32bit+64bit
+      * [ok] MS Visual Studio 2013 32bit+64bit
+      * [ok] MS Visual Studio 2015 32bit+64bit
       * [fail] mingw 64bit
 * OSX El Capitan v10.11.1
    * compiler tool chains:
-      * [ok] Xcode
+      * [ok] Xcode, AppleClang 7.0.2
+* Linux, Ubuntu 14.x, 64bit
+   * compiler tool chains:
+      * [ok] GNU CC 4.9.2
 
 
 ### Build native libs
