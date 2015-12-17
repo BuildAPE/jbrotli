@@ -7,7 +7,7 @@ import static de.bitkings.jbrotli.BrotliErrorChecker.assertBrotliOk;
 public final class BrotliStreamCompressor {
 
   static {
-    initJavaFieldIdCache();
+    assertBrotliOk(initJavaFieldIdCache());
   }
 
   private final long brotliCompressorInstanceRef = 0;
@@ -68,7 +68,7 @@ public final class BrotliStreamCompressor {
     return assertBrotliOk(getInputBlockSize());
   }
 
-  private native static void initJavaFieldIdCache();
+  private native static int initJavaFieldIdCache();
 
   private native int getInputBlockSize();
 

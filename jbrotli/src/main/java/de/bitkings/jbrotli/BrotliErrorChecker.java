@@ -85,6 +85,8 @@ public class BrotliErrorChecker {
         return "Error in native Brotli library 'STREAM_COMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF'." + msg;
       case BrotliError.STREAM_COMPRESS_ByteBuffer_WriteBrotliData:
         return "Error in native Brotli library 'STREAM_COMPRESS_ByteBuffer_WriteBrotliData'." + msg;
+      case BrotliError.NATIVE_GET_FIELD_ID_ERROR:
+        return "Error in native Brotli library 'NATIVE_GET_FIELD_ID_ERROR'." + msg;
       default:
         return "Error in native Brotli library." + msg;
     }

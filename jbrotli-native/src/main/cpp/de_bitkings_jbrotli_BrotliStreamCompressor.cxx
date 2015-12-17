@@ -51,11 +51,15 @@ static jfieldID brotliCompressorInstanceRefID;
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    initJavaFieldIdCache
- * Signature: ()V
+ * Signature: ()I
  */
-JNIEXPORT void JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initJavaFieldIdCache(JNIEnv *env,
+JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initJavaFieldIdCache(JNIEnv *env,
                                                                                             jclass cls) {
   brotliCompressorInstanceRefID = env->GetFieldID(cls, "brotliCompressorInstanceRef", "J");
+  if (NULL == brotliCompressorInstanceRefID) {
+    return de_bitkings_jbrotli_BrotliError_NATIVE_GET_FIELD_ID_ERROR;
+  }
+  return 0;
 }
 
 /*

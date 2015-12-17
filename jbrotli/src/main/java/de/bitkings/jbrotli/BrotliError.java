@@ -3,6 +3,7 @@ package de.bitkings.jbrotli;
 public class BrotliError {
 
   public static final int NATIVE_ERROR = -1;
+  public static final int NATIVE_GET_FIELD_ID_ERROR = -2;
 
   public static final int COMPRESS_GetPrimitiveArrayCritical_INBUF = -10;
   public static final int COMPRESS_GetPrimitiveArrayCritical_OUTBUF = -11;

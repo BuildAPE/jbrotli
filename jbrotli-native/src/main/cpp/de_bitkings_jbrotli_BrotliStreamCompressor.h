@@ -10,9 +10,9 @@ extern "C" {
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    initJavaFieldIdCache
- * Signature: ()V
+ * Signature: ()I
  */
-JNIEXPORT void JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initJavaFieldIdCache
+JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initJavaFieldIdCache
   (JNIEnv *, jclass);
 
 /*
