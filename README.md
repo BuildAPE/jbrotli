@@ -2,9 +2,7 @@
 jBrotli
 =========================================
 
-## About jBrotli
-
-Java bindings for [Brotli](https://github.com/google/brotli.git): a new compression algorithm for the internet
+Java bindings for [Brotli](https://github.com/google/brotli.git): a new compression algorithm for the internet.
 
 ##### License
 
@@ -16,7 +14,7 @@ Java bindings for [Brotli](https://github.com/google/brotli.git): a new compress
 
 ##### Example usage - Tomcat
 
-I've build a second experiment to let a [patched Tomcat server](https://github.com/nitram509/tomcat80) use jbrotli.
+I've build a second experiment to let a [patched Tomcat server](https://github.com/nitram509/tomcat80) make use of jbrotli.
 
 
 ## About Brotli
