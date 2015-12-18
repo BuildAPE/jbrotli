@@ -14,6 +14,11 @@ Java bindings for [Brotli](https://github.com/google/brotli.git): a new compress
 
 🚨 Experimental 🚀
 
+##### Example usage - Tomcat
+
+I've build a second experiment to let a [patched Tomcat server](https://github.com/nitram509/tomcat80) use jbrotli.
+
+
 ## About Brotli
 
 Brotli is a generic-purpose lossless compression algorithm that compresses data using a combination of a modern variant of the LZ77 algorithm,
