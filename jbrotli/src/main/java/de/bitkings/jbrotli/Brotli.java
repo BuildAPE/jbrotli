@@ -2,7 +2,7 @@ package de.bitkings.jbrotli;
 
 public class Brotli {
 
-  public static final String BROTLI_VERSION = "0.2.0";
+  public static final String BROTLI_VERSION = "HEAD-2015-12-11-commit_90eb91b04cc61c2562b92ba2aa6f59a7dc3950b3";
 
   public static final Mode DEFAULT_MODE = Mode.GENERIC;
   public static final int DEFAULT_QUALITY = 11;
