@@ -119,49 +119,51 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_getInputB
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    compressBytes
- * Signature: ([BII[BI)I
+ * Signature: ([BII)[B
  */
-JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressBytes(JNIEnv *env,
-                                                                                     jobject thisObj,
-                                                                                     jbyteArray inByteArray,
-                                                                                     jint inPosition,
-                                                                                     jint inLength,
-                                                                                     jbyteArray outByteArray,
-                                                                                     jint outLength) {
+JNIEXPORT jbyteArray JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressBytes(JNIEnv *env,
+                                                                                           jobject thisObj,
+                                                                                           jbyteArray inByteArray,
+                                                                                           jint inPosition,
+                                                                                           jint inLength) {
+
   if (inPosition < 0 || inLength < 0) {
     env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: input array position and length must be greater than zero.");
-    return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
+    return NULL;
   }
 
-  if (inLength == 0) return 0;
+  if (inLength == 0) return env->NewByteArray(0);
 
   brotli::BrotliCompressor *compressor = (brotli::BrotliCompressor*) JNU_GetLongFieldAsPtr(env, thisObj, brotliCompressorInstanceRefID);
   if (NULL == compressor) {
     env->ThrowNew(env->FindClass("java/lang/IllegalStateException"), "BrotliStreamCompressor was already closed. You need to create a new object before start compressing.");
-    return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
+    return NULL;
   }
 
   uint8_t *inBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(inByteArray, 0);
-  if (inBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_GetPrimitiveArrayCritical_INBUF;
-  inBufCritArray += inPosition;
-  compressor->CopyInputToRingBuffer(inLength, inBufCritArray);
+  if (inBufCritArray == NULL || env->ExceptionCheck()) return NULL;
+  compressor->CopyInputToRingBuffer(inLength, inBufCritArray + inPosition);
   env->ReleasePrimitiveArrayCritical(inByteArray, inBufCritArray, 0);
-  if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ReleasePrimitiveArrayCritical_INBUF;
+  if (env->ExceptionCheck()) return NULL;
 
-  size_t computedOutLength = outLength;
+  size_t computedOutLength = 0;
   uint8_t *brotliOutBufferPtr;
   bool writeResult = compressor->WriteBrotliData(true, false, &computedOutLength, &brotliOutBufferPtr);
-  if (!writeResult) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_WriteBrotliData;
-
-  if (computedOutLength > 0) {
-    uint8_t *outBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(outByteArray, 0);
-    if (outBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_GetPrimitiveArrayCritical_OUTBUF;
-    memcpy(outBufCritArray, brotliOutBufferPtr, computedOutLength);
-    env->ReleasePrimitiveArrayCritical(outByteArray, outBufCritArray, 0);
-    if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_STREAM_COMPRESS_ReleasePrimitiveArrayCritical_OUTBUF;
+  if (!writeResult) {
+    env->ThrowNew(env->FindClass("java/lang/IllegalStateException"), "Error in native code BrotliCompressor::WriteBrotliData().");
+    return NULL;
   }
 
-  return computedOutLength;
+  jbyteArray outByteArray = env->NewByteArray(computedOutLength);
+  if (computedOutLength > 0) {
+    uint8_t *outBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(outByteArray, 0);
+    if (outBufCritArray == NULL || env->ExceptionCheck()) return NULL;
+    memcpy(outBufCritArray, brotliOutBufferPtr, computedOutLength);
+    env->ReleasePrimitiveArrayCritical(outByteArray, outBufCritArray, 0);
+    if (env->ExceptionCheck()) return NULL;
+  }
+
+  return outByteArray;
 }
 
 /*

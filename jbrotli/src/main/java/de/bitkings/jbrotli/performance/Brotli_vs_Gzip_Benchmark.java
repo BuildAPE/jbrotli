@@ -71,8 +71,15 @@ public class Brotli_vs_Gzip_Benchmark {
 
   @Benchmark
   public void brotli_compression_with_BrotliStreamCompressor_using_byte_array() {
-    int compress = brotliStreamCompressor.compress(cpHtmlData, 0, cpHtmlData.length, out);
-    if (!(compress > 0)) throw new AssertionError("epic fail, err: " + compress);
+    out = brotliStreamCompressor.compress(cpHtmlData, 0, cpHtmlData.length);
+    if (out == null) throw new AssertionError("epic fail");
+  }
+
+  @Benchmark
+  public void brotli_compression_with_BrotliStreamCompressor_using_ByteBuffer() {
+    cpHtmlDataByteBuffer.position(0);
+    outByteBuffer = brotliStreamCompressor.compress(cpHtmlDataByteBuffer, true);
+    if (outByteBuffer.capacity() == 0) throw new AssertionError("epic fail");
   }
 
   @Benchmark

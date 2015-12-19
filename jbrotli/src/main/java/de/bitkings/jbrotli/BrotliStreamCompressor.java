@@ -23,15 +23,15 @@ public final class BrotliStreamCompressor implements Closeable {
     assertBrotliOk(initBrotliCompressor(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock()));
   }
 
-  public final int compress(byte[] in, byte[] out) {
-    return compress(in, 0, in.length, out);
+  public final byte[] compress(byte[] in) {
+    return compress(in, 0, in.length);
   }
 
-  public final int compress(byte[] in, int inPosition, int inLength, byte[] out) {
+  public final byte[] compress(byte[] in, int inPosition, int inLength) {
     if (inPosition + inLength > in.length || inPosition < 0 || inLength < 0) {
       throw new IllegalArgumentException("The source position + length must me smaller then the source byte array's length.");
     }
-    return assertBrotliOk(compressBytes(in, inPosition, inLength, out, out.length));
+    return compressBytes(in, inPosition, inLength);
   }
 
   /**
@@ -89,7 +89,7 @@ public final class BrotliStreamCompressor implements Closeable {
 
   private native int freeNativeResources();
 
-  private native int compressBytes(byte[] inArray, int inPosition, int inLength, byte[] outArray, int outLength);
+  private native byte[] compressBytes(byte[] inArray, int inPosition, int inLength);
 
   private native ByteBuffer compressByteBuffer(ByteBuffer inByteBuffer, int inPosition, int inLength, boolean doFlush);
 

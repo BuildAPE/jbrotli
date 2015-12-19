@@ -23,17 +23,16 @@ public class TestSingleFileCompression {
     NativeLoader.loadLibrary("brotli");
 
     byte[] data = loadDemoData();
-    byte[] compressedBuffer = new byte[data.length * 2];
 
     BrotliStreamCompressor brotliStreamCompressor = new BrotliStreamCompressor(Brotli.DEFAULT_PARAMETER);
-    int compressedSize = brotliStreamCompressor.compress(data, compressedBuffer);
+    byte[] compressedBuffer = brotliStreamCompressor.compress(data);
 
-    writeDemoDataCompressed(compressedBuffer, compressedSize);
+    writeDemoDataCompressed(compressedBuffer);
   }
 
-  private void writeDemoDataCompressed(byte[] compressedBuffer, int compressedSize) throws IOException {
+  private void writeDemoDataCompressed(byte[] compressedBuffer) throws IOException {
     try (FileOutputStream fileOutputStream = new FileOutputStream("cp.html.brotli");) {
-      fileOutputStream.write(compressedBuffer, 0, compressedSize);
+      fileOutputStream.write(compressedBuffer, 0, compressedBuffer.length);
     }
   }
 
