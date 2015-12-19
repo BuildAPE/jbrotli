@@ -44,7 +44,7 @@ int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuf, compressedB
 ```java
 NativeLoader.loadLibrary("brotli");
 
-byte[] inBuf = "Brotli: a new compression algorithm for the internet. Now available for Java!".getBytes("ASCII");
+byte[] inBuf = "Brotli: a new compression algorithm for the internet. Now available for Java!".getBytes();
 BrotliStreamCompressor streamCompressor = new BrotliStreamCompressor(Brotli.DEFAULT_PARAMETER);
 byte[] compressed = streamCompressor.compress(inBuf);
 ```
