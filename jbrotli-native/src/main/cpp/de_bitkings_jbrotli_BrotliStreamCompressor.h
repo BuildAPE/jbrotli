@@ -42,10 +42,10 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_freeNativ
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    compressBytes
- * Signature: ([BII)[B
+ * Signature: ([BIIZ)[B
  */
 JNIEXPORT jbyteArray JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressBytes
-  (JNIEnv *, jobject, jbyteArray, jint, jint);
+  (JNIEnv *, jobject, jbyteArray, jint, jint, jboolean);
 
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor

@@ -30,24 +30,26 @@ public final class BrotliStreamCompressor implements Closeable {
   }
 
   /**
-   * @param in input byte array
+   * @param in      input byte array
+   * @param doFlush do flush
    * @return compressed byte array or NULL if there was an error in native code
    */
-  public final byte[] compress(byte[] in) {
-    return compress(in, 0, in.length);
+  public final byte[] compress(byte[] in, boolean doFlush) {
+    return compress(in, 0, in.length, doFlush);
   }
 
   /**
    * @param in         input byte array
    * @param inPosition position to start compress from
    * @param inLength   length in byte to compress
-   * @return compressed byte array or NULL if there was an error in native code
+   * @param doFlush    do flush
+   * @return compressed byte array
    */
-  public final byte[] compress(byte[] in, int inPosition, int inLength) {
+  public final byte[] compress(byte[] in, int inPosition, int inLength, boolean doFlush) {
     if (inPosition + inLength > in.length || inPosition < 0 || inLength < 0) {
       throw new IllegalArgumentException("The source position + length must me smaller then the source byte array's length.");
     }
-    return compressBytes(in, inPosition, inLength);
+    return compressBytes(in, inPosition, inLength, doFlush);
   }
 
   /**
@@ -56,7 +58,7 @@ public final class BrotliStreamCompressor implements Closeable {
    *
    * @param in      input buffer
    * @param doFlush do flush
-   * @return a direct baked {@link ByteBuffer} containing the compressed output OR null, if input was 0 bytes
+   * @return a direct baked {@link ByteBuffer} containing the compressed output
    */
   public final ByteBuffer compress(ByteBuffer in, boolean doFlush) {
     int inPosition = in.position();
@@ -105,7 +107,7 @@ public final class BrotliStreamCompressor implements Closeable {
 
   private native int freeNativeResources();
 
-  private native byte[] compressBytes(byte[] inArray, int inPosition, int inLength);
+  private native byte[] compressBytes(byte[] inArray, int inPosition, int inLength, boolean doFlush);
 
   private native ByteBuffer compressByteBuffer(ByteBuffer inByteBuffer, int inPosition, int inLength, boolean doFlush);
 

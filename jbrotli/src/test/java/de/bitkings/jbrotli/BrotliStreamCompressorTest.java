@@ -38,10 +38,26 @@ public class BrotliStreamCompressorTest {
   }
 
   @Test
-  public void compress_with_byte_array() throws Exception {
-    byte[] out = compressor.compress(A_BYTES);
+  public void compress_with_byte_array_and_flushing() throws Exception {
+    byte[] out = compressor.compress(A_BYTES, true);
 
     assertThat(out).hasSize(10);
+    assertThat(out).isEqualTo(A_BYTES_COMPRESSED);
+  }
+
+  @Test
+  public void compress_with_byte_array_without_flushing() throws Exception {
+
+    // when
+    byte[] out = compressor.compress(A_BYTES, false);
+
+    // then
+    assertThat(out).hasSize(0);
+
+    // when
+    out = compressor.compress(new byte[0], true);
+
+    // then
     assertThat(out).isEqualTo(A_BYTES_COMPRESSED);
   }
 
@@ -49,7 +65,7 @@ public class BrotliStreamCompressorTest {
       expectedExceptionsMessageRegExp = "The source position \\+ length must me smaller then the source byte array's length.")
   public void using_negative_position_throws_IllegalArgumentException() throws Exception {
 
-    compressor.compress(A_BYTES, -1, 0);
+    compressor.compress(A_BYTES, -1, 0, true);
 
     // expect exception
   }
@@ -58,7 +74,7 @@ public class BrotliStreamCompressorTest {
       expectedExceptionsMessageRegExp = "The source position \\+ length must me smaller then the source byte array's length.")
   public void using_negative_length_throws_IllegalArgumentException() throws Exception {
 
-    compressor.compress(A_BYTES, 0, -1);
+    compressor.compress(A_BYTES, 0, -1, true);
 
     // expect exception
   }
@@ -74,7 +90,7 @@ public class BrotliStreamCompressorTest {
     System.arraycopy(A_BYTES, 0, in, testPosition, testLength);
 
     // when
-    byte[] out = compressor.compress(in, testPosition, testLength);
+    byte[] out = compressor.compress(in, testPosition, testLength, true);
 
     // then
     assertThat(out).isEqualTo(A_BYTES_COMPRESSED);
