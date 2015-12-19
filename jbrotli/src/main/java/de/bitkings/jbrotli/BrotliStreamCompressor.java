@@ -1,24 +1,26 @@
 package de.bitkings.jbrotli;
 
+import java.io.Closeable;
 import java.nio.ByteBuffer;
 
 import static de.bitkings.jbrotli.BrotliErrorChecker.assertBrotliOk;
+import static de.bitkings.jbrotli.BrotliErrorChecker.isBrotliOk;
 
-public final class BrotliStreamCompressor {
+public final class BrotliStreamCompressor implements Closeable {
 
   static {
     assertBrotliOk(initJavaFieldIdCache());
   }
 
+  // will be used from native code to store native compressor object
   private final long brotliCompressorInstanceRef = 0;
 
-  public final void init(Brotli.Parameter parameter) {
-    assertBrotliOk(initBrotliCompressor(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock()));
+  public BrotliStreamCompressor() {
+    this(Brotli.DEFAULT_PARAMETER);
   }
 
-  public final boolean isInitialized() {
-    // will be set within native code
-    return brotliCompressorInstanceRef != 0;
+  public BrotliStreamCompressor(Brotli.Parameter parameter) {
+    assertBrotliOk(initBrotliCompressor(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock()));
   }
 
   public final int compress(byte[] in, byte[] out) {
@@ -64,6 +66,17 @@ public final class BrotliStreamCompressor {
     return out;
   }
 
+  @Override
+  protected void finalize() throws Throwable {
+    super.finalize();
+    close();
+  }
+
+  @Override
+  public void close() throws BrotliException {
+    isBrotliOk(freeNativeResources());
+  }
+
   public final int getMaxInputBufferSize() {
     return assertBrotliOk(getInputBlockSize());
   }
@@ -73,6 +86,8 @@ public final class BrotliStreamCompressor {
   private native int getInputBlockSize();
 
   private native int initBrotliCompressor(int mode, int quality, int lgwin, int lgblock);
+
+  private native int freeNativeResources();
 
   private native int compressBytes(byte[] inArray, int inPosition, int inLength, byte[] outArray, int outLength);
 

@@ -21,8 +21,7 @@ public class BrotliStreamCompressorTest {
 
   @BeforeMethod
   public void setUp() throws Exception {
-    compressor = new BrotliStreamCompressor();
-    compressor.init(Brotli.DEFAULT_PARAMETER);
+    compressor = new BrotliStreamCompressor(Brotli.DEFAULT_PARAMETER);
   }
 
   @Test
@@ -30,8 +29,7 @@ public class BrotliStreamCompressorTest {
     Brotli.Parameter parameter = Brotli.DEFAULT_PARAMETER;
     parameter.setLgblock(16);
 
-    compressor = new BrotliStreamCompressor();
-    compressor.init(parameter);
+    compressor = new BrotliStreamCompressor(parameter);
 
     int maxInputBufferSize = compressor.getMaxInputBufferSize();
 
@@ -153,4 +151,29 @@ public class BrotliStreamCompressorTest {
     assertThat(buf).startsWith(A_BYTES_COMPRESSED);
   }
 
+  @Test(expectedExceptions = IllegalStateException.class,
+      expectedExceptionsMessageRegExp = "^BrotliStreamCompressor was already closed.*")
+  public void auto_close_frees_resources() throws Exception {
+    // given
+    BrotliStreamCompressor brotliStreamCompressor = new BrotliStreamCompressor();
+
+    // when
+    brotliStreamCompressor.close();
+
+    // then exception
+    brotliStreamCompressor.getMaxInputBufferSize();
+  }
+
+  @Test
+  public void close_is_idempotent() throws Exception {
+    // given
+    BrotliStreamCompressor brotliStreamCompressor = new BrotliStreamCompressor();
+
+    // when
+    brotliStreamCompressor.close();
+    brotliStreamCompressor.close();
+    brotliStreamCompressor.close();
+
+    // no exception ;-)
+  }
 }

@@ -87,6 +87,22 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initBrotl
 
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
+ * Method:    freeNativeResources
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_freeNativeResources(JNIEnv *env,
+                                                                                           jobject thisObj) {
+  brotli::BrotliCompressor *compressor = (brotli::BrotliCompressor*) JNU_GetLongFieldAsPtr(env, thisObj, brotliCompressorInstanceRefID);
+  if (NULL != compressor) {
+    delete compressor;
+    compressor = NULL;
+    JNU_SetLongFieldFromPtr(env, thisObj, brotliCompressorInstanceRefID, compressor);
+  }
+  return 0;
+}
+
+/*
+ * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    getInputBlockSize
  * Signature: ()I
  */
@@ -94,7 +110,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_getInputB
                                                                                          jobject thisObj) {
   brotli::BrotliCompressor *compressor = (brotli::BrotliCompressor*) JNU_GetLongFieldAsPtr(env, thisObj, brotliCompressorInstanceRefID);
   if (NULL == compressor) {
-    env->ThrowNew(env->FindClass("java/lang/IllegalStateException"), "BrotliStreamCompressor not initialized. Call init() at least once before getInputBlockSize.");
+    env->ThrowNew(env->FindClass("java/lang/IllegalStateException"), "BrotliStreamCompressor was already closed. You need to create a new object before getInputBlockSize.");
     return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
   }
   return compressor->input_block_size();
@@ -121,7 +137,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compressB
 
   brotli::BrotliCompressor *compressor = (brotli::BrotliCompressor*) JNU_GetLongFieldAsPtr(env, thisObj, brotliCompressorInstanceRefID);
   if (NULL == compressor) {
-    env->ThrowNew(env->FindClass("java/lang/IllegalStateException"), "BrotliStreamCompressor not initialized. Call init() at least once before start compressing.");
+    env->ThrowNew(env->FindClass("java/lang/IllegalStateException"), "BrotliStreamCompressor was already closed. You need to create a new object before start compressing.");
     return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
   }
 
@@ -167,7 +183,7 @@ JNIEXPORT jobject JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_compre
 
   brotli::BrotliCompressor *compressor = (brotli::BrotliCompressor *) JNU_GetLongFieldAsPtr(env, thisObj, brotliCompressorInstanceRefID);
   if (NULL == compressor) {
-    env->ThrowNew(env->FindClass("java/lang/IllegalStateException"), "BrotliStreamCompressor not initialized. Call init() at least once before start compressing.");
+    env->ThrowNew(env->FindClass("java/lang/IllegalStateException"), "BrotliStreamCompressor was already closed. You need to create a new object before start compressing.");
     return NULL;
   }
 

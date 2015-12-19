@@ -17,8 +17,7 @@ public class BrotliOutputStream extends OutputStream {
 
   public BrotliOutputStream(OutputStream outputStream, Brotli.Parameter parameter) {
     this.outputStream = outputStream;
-    brotliStreamCompressor = new BrotliStreamCompressor();
-    brotliStreamCompressor.init(parameter);
+    brotliStreamCompressor = new BrotliStreamCompressor(parameter);
   }
 
   @Override

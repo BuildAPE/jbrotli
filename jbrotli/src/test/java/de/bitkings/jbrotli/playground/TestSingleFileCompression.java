@@ -25,8 +25,7 @@ public class TestSingleFileCompression {
     byte[] data = loadDemoData();
     byte[] compressedBuffer = new byte[data.length * 2];
 
-    BrotliStreamCompressor brotliStreamCompressor = new BrotliStreamCompressor();
-    brotliStreamCompressor.init(Brotli.DEFAULT_PARAMETER);
+    BrotliStreamCompressor brotliStreamCompressor = new BrotliStreamCompressor(Brotli.DEFAULT_PARAMETER);
     int compressedSize = brotliStreamCompressor.compress(data, compressedBuffer);
 
     writeDemoDataCompressed(compressedBuffer, compressedSize);

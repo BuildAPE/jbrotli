@@ -38,8 +38,7 @@ public class Brotli_vs_Gzip_Benchmark {
     brotliParameter = new Brotli.Parameter(Brotli.Mode.GENERIC, 5, Brotli.DEFAULT_LGWIN, Brotli.DEFAULT_LGBLOCK);
 
     brotliCompressor = new BrotliCompressor();
-    brotliStreamCompressor = new BrotliStreamCompressor();
-    brotliStreamCompressor.init(brotliParameter);
+    brotliStreamCompressor = new BrotliStreamCompressor(brotliParameter);
 
     out = new byte[24603];
     outByteBuffer = ByteBuffer.allocateDirect(24603);

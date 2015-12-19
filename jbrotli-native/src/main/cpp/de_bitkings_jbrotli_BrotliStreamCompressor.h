@@ -33,6 +33,14 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initBrotl
 
 /*
  * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
+ * Method:    freeNativeResources
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_freeNativeResources
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     de_bitkings_jbrotli_BrotliStreamCompressor
  * Method:    compressBytes
  * Signature: ([BII[BI)I
  */
