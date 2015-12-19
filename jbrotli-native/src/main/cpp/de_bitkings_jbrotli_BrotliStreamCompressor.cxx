@@ -75,7 +75,11 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliStreamCompressor_initBrotl
                                                                                             jint lgblock) {
   brotli::BrotliParams params = mapToBrotliParams(env, mode, quality, lgwin, lgblock);
 
-  brotli::BrotliCompressor *compressor = new brotli::BrotliCompressor(params);
+  brotli::BrotliCompressor *compressor = (brotli::BrotliCompressor*) JNU_GetLongFieldAsPtr(env, thisObj, brotliCompressorInstanceRefID);
+  if (NULL != compressor) {
+    delete compressor;
+  }
+  compressor = new brotli::BrotliCompressor(params);
   JNU_SetLongFieldFromPtr(env, thisObj, brotliCompressorInstanceRefID, compressor);
 
   return 0;
