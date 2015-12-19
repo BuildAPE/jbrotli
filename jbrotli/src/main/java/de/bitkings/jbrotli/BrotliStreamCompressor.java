@@ -15,18 +15,34 @@ public final class BrotliStreamCompressor implements Closeable {
   // will be used from native code to store native compressor object
   private final long brotliCompressorInstanceRef = 0;
 
+  /**
+   * Uses {@link Brotli#DEFAULT_PARAMETER}
+   */
   public BrotliStreamCompressor() {
     this(Brotli.DEFAULT_PARAMETER);
   }
 
+  /**
+   * @param parameter parameter to use for this compressor
+   */
   public BrotliStreamCompressor(Brotli.Parameter parameter) {
     assertBrotliOk(initBrotliCompressor(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock()));
   }
 
+  /**
+   * @param in input byte array
+   * @return compressed byte array or NULL if there was an error in native code
+   */
   public final byte[] compress(byte[] in) {
     return compress(in, 0, in.length);
   }
 
+  /**
+   * @param in         input byte array
+   * @param inPosition position to start compress from
+   * @param inLength   length in byte to compress
+   * @return compressed byte array or NULL if there was an error in native code
+   */
   public final byte[] compress(byte[] in, int inPosition, int inLength) {
     if (inPosition + inLength > in.length || inPosition < 0 || inLength < 0) {
       throw new IllegalArgumentException("The source position + length must me smaller then the source byte array's length.");
