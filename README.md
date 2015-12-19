@@ -26,6 +26,7 @@ It is similar in speed with deflate but offers more dense compression.
 It was developed by Google and released in September 2015 via this blog post:
 [Introducing Brotli: a new compression algorithm for the internet](http://google-opensource.blogspot.de/2015/09/introducing-brotli-new-compression.html)
 
+
 ## Example compression code snippet
 
 ##### Example of regular BrotliCompressor with custom dictionary
@@ -48,6 +49,7 @@ byte[] inBuf = "Brotli: a new compression algorithm for the internet. Now availa
 BrotliStreamCompressor streamCompressor = new BrotliStreamCompressor(Brotli.DEFAULT_PARAMETER);
 byte[] compressed = streamCompressor.compress(inBuf);
 ```
+
 
 ## Building this library
 
