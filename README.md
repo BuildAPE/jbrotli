@@ -28,13 +28,25 @@ It was developed by Google and released in September 2015 via this blog post:
 
 ## Example compression code snippet
 
-```Java
+##### Example of regular BrotliCompressor with custom dictionary
+
+```java
 NativeLoader.loadLibrary("brotli");
 
 byte[] inBuf = "Brotli: a new compression algorithm for the internet. Now available for Java!".getBytes();
 byte[] compressedBuf = new byte[2048];
 BrotliCompressor compressor = new BrotliCompressor();
 int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuf, compressedBuf);
+```
+
+##### Example of BrotliStreamCompressor using default dictionary
+ 
+```java
+NativeLoader.loadLibrary("brotli");
+
+byte[] inBuf = "Brotli: a new compression algorithm for the internet. Now available for Java!".getBytes("ASCII");
+BrotliStreamCompressor streamCompressor = new BrotliStreamCompressor(Brotli.DEFAULT_PARAMETER);
+byte[] compressed = streamCompressor.compress(inBuf);
 ```
 
 ## Building this library
