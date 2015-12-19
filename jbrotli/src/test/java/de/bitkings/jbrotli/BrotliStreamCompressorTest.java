@@ -86,10 +86,10 @@ public class BrotliStreamCompressorTest {
   }
 
   //
-  // *** ByteBuffer **********
+  // *** direct ByteBuffer **********
 
   @Test
-  public void compress_with_ByteBuffer_and_flushing() throws Exception {
+  public void compress_with_direct_ByteBuffer_and_flushing() throws Exception {
     ByteBuffer inBuffer = ByteBuffer.allocateDirect(A_BYTES.length);
     inBuffer.put(A_BYTES);
     inBuffer.position(0);
@@ -104,7 +104,7 @@ public class BrotliStreamCompressorTest {
   }
 
   @Test
-  public void compress_with_ByteBuffer_without_flushing() throws Exception {
+  public void compress_with_direct_ByteBuffer_without_flushing() throws Exception {
     ByteBuffer inBuffer = ByteBuffer.allocateDirect(A_BYTES.length);
     inBuffer.put(A_BYTES);
     inBuffer.position(0);
@@ -126,7 +126,7 @@ public class BrotliStreamCompressorTest {
   }
 
   @Test
-  public void compress_with_ByteBuffer_using_position_and_length() throws Exception {
+  public void compress_with_direct_ByteBuffer_using_position_and_length() throws Exception {
     // setup
     ByteBuffer inBuffer = ByteBuffer.allocateDirect(100);
     inBuffer.put(createFilledByteArray(100, 'x'));
