@@ -74,8 +74,11 @@ public class BrotliCompressorTest {
     // expect exception
   }
 
+  //
+  // *** Direct ByteBuffer ********
+
   @Test
-  public void compress_with_ByteBuffer() throws Exception {
+  public void compress_with_direct_ByteBuffer() throws Exception {
     ByteBuffer inBuffer = ByteBuffer.allocateDirect(A_BYTES.length);
     inBuffer.put(A_BYTES);
     inBuffer.position(0);
@@ -91,7 +94,7 @@ public class BrotliCompressorTest {
   }
 
   @Test
-  public void compress_with_ByteBuffer_using_position_and_limit_on_input_buffer() throws Exception {
+  public void compress_with_direct_ByteBuffer_using_position_and_limit_on_input_buffer() throws Exception {
     // setup
     ByteBuffer inBuffer = ByteBuffer.allocateDirect(100);
     ByteBuffer outBuffer = ByteBuffer.allocateDirect(A_BYTES_COMPRESSED.length);
@@ -119,7 +122,7 @@ public class BrotliCompressorTest {
   }
 
   @Test
-  public void compress_with_ByteBuffer_using_position_and_limit_on_output_buffer() throws Exception {
+  public void compress_with_direct_ByteBuffer_using_position_and_limit_on_output_buffer() throws Exception {
     // setup
     ByteBuffer inBuffer = ByteBuffer.allocateDirect(A_BYTES.length);
     ByteBuffer outBuffer = ByteBuffer.allocateDirect(100);
@@ -143,6 +146,129 @@ public class BrotliCompressorTest {
     byte[] buf = new byte[A_BYTES_COMPRESSED.length];
     outBuffer.get(buf);
     assertThat(buf).startsWith(A_BYTES_COMPRESSED);
+  }
+
+  //
+  // *** byte[] wrapped ByteBuffer ********
+
+  @Test
+  public void compress_with_byte_array_wrapped_ByteBuffer() throws Exception {
+    ByteBuffer inBuffer = ByteBuffer.wrap(A_BYTES);
+    ByteBuffer outBuffer = ByteBuffer.allocate(10);
+    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuffer, outBuffer);
+
+    // then
+    assertThat(outLength).isEqualTo(10);
+    // then
+    byte[] buf = new byte[10];
+    outBuffer.get(buf);
+    assertThat(buf).startsWith(A_BYTES_COMPRESSED);
+  }
+
+  @Test
+  public void compress_with_byte_array_wrapped_ByteBuffer_using_position_and_limit_on_input_buffer() throws Exception {
+    // setup
+    ByteBuffer inBuffer = ByteBuffer.wrap(createFilledByteArray(100, 'x'));
+    ByteBuffer outBuffer = ByteBuffer.allocate(A_BYTES_COMPRESSED.length);
+
+    // given
+    int testPosition = 23;
+    inBuffer.position(testPosition);
+    inBuffer.put(A_BYTES);
+    inBuffer.limit(testPosition + A_BYTES.length);
+    inBuffer.position(testPosition);
+
+    // when
+    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuffer, outBuffer);
+
+    // then
+    assertThat(outLength).isEqualTo(A_BYTES_COMPRESSED.length);
+    assertThat(outBuffer.position()).isEqualTo(0);
+    assertThat(outBuffer.limit()).isEqualTo(outLength);
+    assertThat(inBuffer.position()).isEqualTo(testPosition + A_BYTES.length);
+    // then
+    byte[] buf = new byte[A_BYTES_COMPRESSED.length];
+    outBuffer.get(buf);
+    assertThat(buf).startsWith(A_BYTES_COMPRESSED);
+  }
+
+  @Test
+  public void compress_with_byte_array_wrapped_ByteBuffer_using_arrayOffset_and_limit_on_input_buffer() throws Exception {
+    // setup
+    ByteBuffer inBuffer = ByteBuffer.wrap(createFilledByteArray(100, 'x'));
+    ByteBuffer outBuffer = ByteBuffer.allocate(A_BYTES_COMPRESSED.length);
+
+    // given
+    int testPosition = 23;
+    inBuffer.position(testPosition);
+    inBuffer.put(A_BYTES);
+    inBuffer.position(testPosition);
+    inBuffer = inBuffer.slice();
+    inBuffer.limit(A_BYTES.length);
+
+    // when
+    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuffer, outBuffer);
+
+    // then
+    assertThat(outLength).isEqualTo(A_BYTES_COMPRESSED.length);
+    assertThat(outBuffer.position()).isEqualTo(0);
+    assertThat(outBuffer.limit()).isEqualTo(outLength);
+    assertThat(inBuffer.position()).isEqualTo(A_BYTES.length);
+    // then
+    byte[] buf = new byte[A_BYTES_COMPRESSED.length];
+    outBuffer.get(buf);
+    assertThat(buf).startsWith(A_BYTES_COMPRESSED);
+  }
+
+  @Test
+  public void compress_with_byte_array_wrapped_ByteBuffer_using_position_and_limit_on_output_buffer() throws Exception {
+    // setup
+    ByteBuffer inBuffer = ByteBuffer.wrap(A_BYTES);
+    ByteBuffer outBuffer = ByteBuffer.allocate(100);
+
+    // given
+    int testPosition = 23;
+    outBuffer.position(testPosition);
+    outBuffer.limit(testPosition + A_BYTES_COMPRESSED.length);
+
+    // when
+    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuffer, outBuffer);
+
+    // then
+    assertThat(outLength).isEqualTo(A_BYTES_COMPRESSED.length);
+    assertThat(outBuffer.position()).isEqualTo(testPosition);
+    assertThat(outBuffer.limit()).isEqualTo(testPosition + outLength);
+    assertThat(inBuffer.position()).isEqualTo(A_BYTES.length);
+    // then
+    byte[] buf = new byte[A_BYTES_COMPRESSED.length];
+    outBuffer.get(buf);
+    assertThat(buf).isEqualTo(A_BYTES_COMPRESSED);
+  }
+
+  @Test
+  public void compress_with_byte_array_wrapped_ByteBuffer_using_arrayOffset_and_limit_on_output_buffer() throws Exception {
+    // setup
+    ByteBuffer inBuffer = ByteBuffer.wrap(A_BYTES);
+    ByteBuffer outBuffer = ByteBuffer.allocate(100);
+
+    // given
+    int testPosition = 23;
+    outBuffer.position(testPosition);
+    outBuffer = outBuffer.slice();
+    outBuffer.limit(A_BYTES_COMPRESSED.length);
+
+    // when
+    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, inBuffer, outBuffer);
+
+    // then
+    assertThat(outLength).isEqualTo(A_BYTES_COMPRESSED.length);
+    assertThat(outBuffer.position()).isEqualTo(0);
+    assertThat(outBuffer.limit()).isEqualTo(outLength);
+    assertThat(inBuffer.position()).isEqualTo(A_BYTES.length);
+    // then
+    byte[] buf = new byte[A_BYTES_COMPRESSED.length];
+    outBuffer.get(buf);
+    assertThat(buf).isEqualTo(A_BYTES_COMPRESSED);
   }
 
   static byte[] createFilledByteArray(int len, char fillChar) {

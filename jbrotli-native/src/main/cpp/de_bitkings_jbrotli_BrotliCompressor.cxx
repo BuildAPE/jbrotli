@@ -48,7 +48,7 @@ extern "C" {
 /*
  * Class:     de_bitkings_jbrotli_BrotliCompressor
  * Method:    compressBytes
- * Signature: (IIII[BII[BI)I
+ * Signature: (IIII[BII[BII)I
  */
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(JNIEnv *env,
                                                                                jclass thisObj,
@@ -57,13 +57,19 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
                                                                                jint lgwin,
                                                                                jint lgblock,
                                                                                jbyteArray inByteArray,
-                                                                               jint inPos,
+                                                                               jint inPosition,
                                                                                jint inLength,
                                                                                jbyteArray outByteArray,
+                                                                               jint outPosition,
                                                                                jint outLength) {
 
-  if (inPos < 0 || inLength < 0) {
+  if (inPosition < 0 || inLength < 0) {
     env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: input array position and length must be greater than zero.");
+    return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
+  }
+
+  if (outPosition < 0 || outLength < 0) {
+    env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: output array position and length must be greater than zero.");
     return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
   }
 
@@ -77,7 +83,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
   uint8_t *outBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(outByteArray, 0);
   if (outBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_COMPRESS_GetPrimitiveArrayCritical_OUTBUF;
 
-  int ok = brotli::BrotliCompressBuffer(params, inLength, inBufCritArray + inPos, &computedOutLength, outBufCritArray);
+  int ok = brotli::BrotliCompressBuffer(params, inLength, inBufCritArray + inPosition, &computedOutLength, outBufCritArray + outPosition);
 
   env->ReleasePrimitiveArrayCritical(outByteArray, outBufCritArray, 0);
   if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_COMPRESS_ReleasePrimitiveArrayCritical_OUTBUF;
