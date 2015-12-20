@@ -77,8 +77,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressBytes(J
   uint8_t *outBufCritArray = (uint8_t *) env->GetPrimitiveArrayCritical(outByteArray, 0);
   if (outBufCritArray == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_COMPRESS_GetPrimitiveArrayCritical_OUTBUF;
 
-  inBufCritArray += inPos;
-  int ok = brotli::BrotliCompressBuffer(params, inLength, inBufCritArray, &computedOutLength, outBufCritArray);
+  int ok = brotli::BrotliCompressBuffer(params, inLength, inBufCritArray + inPos, &computedOutLength, outBufCritArray);
 
   env->ReleasePrimitiveArrayCritical(outByteArray, outBufCritArray, 0);
   if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_COMPRESS_ReleasePrimitiveArrayCritical_OUTBUF;
@@ -130,9 +129,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliCompressor_compressByteBuf
   if (outBufPtr == NULL) return de_bitkings_jbrotli_BrotliError_COMPRESS_ByteBuffer_GetDirectBufferAddress_OUTBUF;
 
   size_t computedOutLength = outLength;
-  inBufPtr += inPosition;
-  outBufPtr += outPosition;
-  int ok = brotli::BrotliCompressBuffer(params, inLength, inBufPtr, &computedOutLength, outBufPtr);
+  int ok = brotli::BrotliCompressBuffer(params, inLength, inBufPtr + inPosition, &computedOutLength, outBufPtr + outPosition);
   if (!ok) {
     return de_bitkings_jbrotli_BrotliError_COMPRESS_ByteBuffer_BrotliCompressBuffer;
   }
