@@ -4,7 +4,6 @@ import java.io.Closeable;
 import java.nio.ByteBuffer;
 
 import static de.bitkings.jbrotli.BrotliErrorChecker.assertBrotliOk;
-import static de.bitkings.jbrotli.BrotliErrorChecker.isBrotliOk;
 
 public final class BrotliStreamCompressor implements Closeable {
 
@@ -24,8 +23,9 @@ public final class BrotliStreamCompressor implements Closeable {
 
   /**
    * @param parameter parameter to use for this compressor
+   * @throws BrotliException
    */
-  public BrotliStreamCompressor(Brotli.Parameter parameter) {
+  public BrotliStreamCompressor(Brotli.Parameter parameter) throws BrotliException {
     assertBrotliOk(initBrotliCompressor(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock()));
   }
 
@@ -87,10 +87,10 @@ public final class BrotliStreamCompressor implements Closeable {
 
   @Override
   public void close() throws BrotliException {
-    isBrotliOk(freeNativeResources());
+    assertBrotliOk(freeNativeResources());
   }
 
-  public final int getMaxInputBufferSize() {
+  public final int getMaxInputBufferSize() throws BrotliException {
     return assertBrotliOk(getInputBlockSize());
   }
 
