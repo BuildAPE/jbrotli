@@ -30,14 +30,14 @@ public class BrotliCompressorTest {
   @Test
   public void compress_with_byte_array() throws Exception {
     byte[] out = new byte[2048];
-    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, 0, A_BYTES.length, out);
+    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, 0, A_BYTES.length, out, 0, out.length);
 
     assertThat(outLength).isEqualTo(10);
     assertThat(out).startsWith(A_BYTES_COMPRESSED);
   }
 
   @Test
-  public void compress_with_byte_array_using_position_and_length() throws Exception {
+  public void compress_with_byte_array_using_position_and_length_on_input_array() throws Exception {
     // setup
     byte[] in = createFilledByteArray(100, 'x');
     byte[] out = new byte[2048];
@@ -48,28 +48,61 @@ public class BrotliCompressorTest {
     System.arraycopy(A_BYTES, 0, in, testPosition, testLength);
 
     // when
-    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, in, testPosition, testLength, out);
+    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, in, testPosition, testLength, out, 0, out.length);
 
     // then
     assertThat(outLength).isEqualTo(10);
     assertThat(out).startsWith(A_BYTES_COMPRESSED);
   }
 
+  @Test
+  public void compress_with_byte_array_using_position_and_length_on_output_array() throws Exception {
+    byte[] out = new byte[2048];
+    int testPosition = 23;
+
+    // when
+    int outLength = compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, 0, A_BYTES.length, out, testPosition, A_BYTES_COMPRESSED.length);
+
+    // then
+    assertThat(outLength).isEqualTo(10);
+    byte[] outCopiedRange = Arrays.copyOfRange(out, testPosition, testPosition + A_BYTES_COMPRESSED.length);
+    assertThat(outCopiedRange).isEqualTo(A_BYTES_COMPRESSED);
+  }
+
   @Test(expectedExceptions = IllegalArgumentException.class)
-  public void compress_with_byte_array_using_negative_position_throws_IllegalArgumentException() throws Exception {
+  public void compress_with_input_byte_array_using_negative_position_throws_IllegalArgumentException() throws Exception {
     byte[] out = new byte[2048];
 
-    compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, -1, A_BYTES.length, out);
+    compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, -1, A_BYTES.length, out, 0, out.length);
+
+    // expect exception
+  }
+
+  @Test(expectedExceptions = IllegalArgumentException.class)
+  public void compress_with_output_byte_array_using_negative_position_throws_IllegalArgumentException() throws Exception {
+    byte[] out = new byte[2048];
+
+    compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, 0, A_BYTES.length, out, -1, out.length);
 
     // expect exception
   }
 
   @Test(expectedExceptions = IllegalArgumentException.class,
       expectedExceptionsMessageRegExp = "Brotli: input array position and length must be greater than zero.")
-  public void compress_with_byte_array_using_negative_length_throws_IllegalArgumentException() throws Exception {
+  public void compress_with_input_byte_array_using_negative_length_throws_IllegalArgumentException() throws Exception {
     byte[] out = new byte[2048];
 
-    compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, 0, -1, out);
+    compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, 0, -1, out, 0, out.length);
+
+    // expect exception
+  }
+
+  @Test(expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Brotli: output array position and length must be greater than zero.")
+  public void compress_with_output__byte_array_using_negative_length_throws_IllegalArgumentException() throws Exception {
+    byte[] out = new byte[2048];
+
+    compressor.compress(Brotli.DEFAULT_PARAMETER, A_BYTES, 0, A_BYTES.length, out, 0, -1);
 
     // expect exception
   }

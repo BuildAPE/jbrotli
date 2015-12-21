@@ -14,7 +14,7 @@ public final class BrotliCompressor {
    * @throws BrotliException
    */
   public final int compress(Brotli.Parameter parameter, byte[] in, byte[] out) throws BrotliException {
-    return compress(parameter, in, 0, in.length, out);
+    return compress(parameter, in, 0, in.length, out, 0, out.length);
   }
 
   /**
@@ -26,11 +26,14 @@ public final class BrotliCompressor {
    * @return output buffer length
    * @throws BrotliException
    */
-  public final int compress(Brotli.Parameter parameter, byte[] in, int inPosition, int inLength, byte[] out) throws BrotliException {
+  public final int compress(Brotli.Parameter parameter, byte[] in, int inPosition, int inLength, byte[] out, int outPosition, int outLength) throws BrotliException {
     if (inPosition + inLength > in.length) {
-      throw new IllegalArgumentException("The source position and length must me smaller then the source byte array's length.");
+      throw new IllegalArgumentException("The input array position and length must me smaller then the source byte array's length.");
     }
-    return assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in, inPosition, inLength, out, 0, out.length));
+    if (outPosition + outLength > out.length) {
+      throw new IllegalArgumentException("The output position and length must me smaller then the source byte array's length.");
+    }
+    return assertBrotliOk(compressBytes(parameter.getMode().mode, parameter.getQuality(), parameter.getLgwin(), parameter.getLgblock(), in, inPosition, inLength, out, outPosition, outLength));
   }
 
   /**

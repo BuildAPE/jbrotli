@@ -13,22 +13,27 @@ public final class BrotliDeCompressor {
    * @throws BrotliException
    */
   public final int deCompress(byte[] in, byte[] out) throws BrotliException {
-    return deCompress(in, 0, in.length, out);
+    return deCompress(in, 0, in.length, out, 0, out.length);
   }
 
   /**
-   * @param in         compressed input
-   * @param inPosition input position
-   * @param inLength   input length
-   * @param out        output buffer
+   * @param in          compressed input
+   * @param inPosition  input position
+   * @param inLength    input length
+   * @param out         output buffer
+   * @param outPosition output position
+   * @param outLength   output length
    * @return output buffer length
    * @throws BrotliException
    */
-  public final int deCompress(byte[] in, int inPosition, int inLength, byte[] out) throws BrotliException {
+  public final int deCompress(byte[] in, int inPosition, int inLength, byte[] out, int outPosition, int outLength) throws BrotliException {
     if (inPosition + inLength > in.length) {
-      throw new IllegalArgumentException("The source position and length must me smaller then the source byte array's length.");
+      throw new IllegalArgumentException("The input array position and length must me smaller then the source byte array's length.");
     }
-    return assertBrotliOk(deCompressBytes(in, inPosition, inLength, out, 0, out.length));
+    if (outPosition + outLength > out.length) {
+      throw new IllegalArgumentException("The output array position and length must me smaller then the source byte array's length.");
+    }
+    return assertBrotliOk(deCompressBytes(in, inPosition, inLength, out, outPosition, outLength));
   }
 
   /**

@@ -5,7 +5,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import static de.bitkings.jbrotli.BrotliCompressorTest.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +38,7 @@ public class BrotliDeCompressorTest {
   }
 
   @Test
-  public void decompress_with_byte_array_using_position_and_length() throws Exception {
+  public void decompress_with_byte_array_using_position_and_length_on_input() throws Exception {
     // setup
     byte[] in = createFilledByteArray(100, 'x');
     byte[] out = new byte[100];
@@ -46,28 +48,62 @@ public class BrotliDeCompressorTest {
     int testLength = A_BYTES_COMPRESSED.length;
     System.arraycopy(A_BYTES_COMPRESSED, 0, in, testPosition, testLength);
 
-    int outLen = decompressor.deCompress(in, testPosition, testLength, out);
+    int outLen = decompressor.deCompress(in, testPosition, testLength, out, 0, out.length);
 
     assertThat(outLen).isEqualTo(A_BYTES.length);
     assertThat(out).startsWith(A_BYTES);
   }
 
+  @Test
+  public void decompress_with_byte_array_using_position_and_length_on_output() throws Exception {
+    // setup
+    byte[] out = new byte[100];
+
+    // when
+    int testPosition = 23;
+    int outLen = decompressor.deCompress(A_BYTES_COMPRESSED, 0, A_BYTES_COMPRESSED.length, out, testPosition, A_BYTES.length);
+
+    assertThat(outLen).isEqualTo(A_BYTES.length);
+    byte[] outCopiedRange = Arrays.copyOfRange(out, testPosition, testPosition + outLen);
+    assertThat(outCopiedRange).isEqualTo(A_BYTES);
+  }
+
   @Test(expectedExceptions = IllegalArgumentException.class)
-  public void using_negative_position_throws_IllegalArgumentException() throws Exception {
+  public void using_negative_position_on_input_throws_IllegalArgumentException() throws Exception {
     byte[] in = A_BYTES_COMPRESSED;
     byte[] out = new byte[2048];
 
-    decompressor.deCompress(in, -1, in.length, out);
+    decompressor.deCompress(in, -1, in.length, out, 0, out.length);
 
     // expect exception
   }
 
   @Test(expectedExceptions = IllegalArgumentException.class)
-  public void using_negative_length_throws_IllegalArgumentException() throws Exception {
+  public void using_negative_position_on_output_throws_IllegalArgumentException() throws Exception {
     byte[] in = A_BYTES_COMPRESSED;
     byte[] out = new byte[2048];
 
-    decompressor.deCompress(in, 0, -1, out);
+    decompressor.deCompress(in, 0, in.length, out, -1, out.length);
+
+    // expect exception
+  }
+
+  @Test(expectedExceptions = IllegalArgumentException.class)
+  public void using_negative_length_on_input_throws_IllegalArgumentException() throws Exception {
+    byte[] in = A_BYTES_COMPRESSED;
+    byte[] out = new byte[2048];
+
+    decompressor.deCompress(in, 0, -1, out, 0, out.length);
+
+    // expect exception
+  }
+
+  @Test(expectedExceptions = IllegalArgumentException.class)
+  public void using_negative_length_on_output_throws_IllegalArgumentException() throws Exception {
+    byte[] in = A_BYTES_COMPRESSED;
+    byte[] out = new byte[2048];
+
+    decompressor.deCompress(in, 0, in.length, out, 0, -1);
 
     // expect exception
   }
