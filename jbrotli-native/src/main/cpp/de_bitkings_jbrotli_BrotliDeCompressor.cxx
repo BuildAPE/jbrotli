@@ -77,14 +77,14 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
   size_t computedOutLength = outLength;
   BrotliResult brotliResult = BrotliDecompressBuffer(inLength, encodedBuffer + inPosition, &computedOutLength, outBuffer + outPosition);
 
-  if (brotliResult == BROTLI_RESULT_ERROR) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_BROTLI_RESULT_ERROR;
-  if (brotliResult == BROTLI_RESULT_NEEDS_MORE_INPUT) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_BROTLI_RESULT_NEEDS_MORE_INPUT;
-  if (brotliResult == BROTLI_RESULT_NEEDS_MORE_OUTPUT) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_BROTLI_RESULT_NEEDS_MORE_OUTPUT;
-
   env->ReleasePrimitiveArrayCritical(outByteArray, outBuffer, 0);
   if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ReleasePrimitiveArrayCritical_OUTBUF;
   env->ReleasePrimitiveArrayCritical(encodedByteArray, encodedBuffer, 0);
   if (env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_ReleasePrimitiveArrayCritical_INBUF;
+
+  if (brotliResult == BROTLI_RESULT_ERROR) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_BROTLI_RESULT_ERROR;
+  if (brotliResult == BROTLI_RESULT_NEEDS_MORE_INPUT) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_BROTLI_RESULT_NEEDS_MORE_INPUT;
+  if (brotliResult == BROTLI_RESULT_NEEDS_MORE_OUTPUT) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_BROTLI_RESULT_NEEDS_MORE_OUTPUT;
 
   return computedOutLength;
 }

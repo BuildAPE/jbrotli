@@ -116,7 +116,7 @@ This is only needed when native method signatures change.
 
 ```bash
 mvn -pl jbrotli compile
-javah -v -d jbrotli-native/src/main/cpp -classpath jbrotli/target/classes de.bitkings.jbrotli.BrotliCompressor de.bitkings.jbrotli.BrotliDeCompressor de.bitkings.jbrotli.BrotliStreamCompressor de.bitkings.jbrotli.BrotliError
+javah -v -d jbrotli-native/src/main/cpp -classpath jbrotli/target/classes de.bitkings.jbrotli.BrotliCompressor de.bitkings.jbrotli.BrotliDeCompressor de.bitkings.jbrotli.BrotliStreamCompressor de.bitkings.jbrotli.BrotliStreamDeCompressor de.bitkings.jbrotli.BrotliError
 ```
 
 ### Run benchmark
