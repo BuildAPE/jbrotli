@@ -46,7 +46,7 @@ public final class BrotliStreamCompressor implements Closeable {
    * @return compressed byte array
    */
   public final byte[] compress(byte[] in, int inPosition, int inLength, boolean doFlush) {
-    if (inPosition + inLength > in.length || inPosition < 0 || inLength < 0) {
+    if (inPosition + inLength > in.length) {
       throw new IllegalArgumentException("The source position + length must me smaller then the source byte array's length.");
     }
     return compressBytes(in, inPosition, inLength, doFlush);

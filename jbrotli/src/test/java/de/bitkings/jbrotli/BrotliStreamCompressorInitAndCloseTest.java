@@ -5,9 +5,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.nio.ByteBuffer;
-
-import static de.bitkings.jbrotli.BrotliCompressorTest.*;
+import static de.bitkings.jbrotli.BrotliCompressorTest.A_BYTES;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BrotliStreamCompressorInitAndCloseTest {
@@ -38,8 +36,8 @@ public class BrotliStreamCompressorInitAndCloseTest {
   }
 
   @Test(expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "The source position \\+ length must me smaller then the source byte array's length.")
-  public void using_negative_position_throws_IllegalArgumentException() throws Exception {
+      expectedExceptionsMessageRegExp = "Brotli: input array position and length must be greater than zero.")
+  public void using_negative_position_on_input_throws_IllegalArgumentException() throws Exception {
 
     compressor.compress(A_BYTES, -1, 0, true);
 
@@ -47,8 +45,8 @@ public class BrotliStreamCompressorInitAndCloseTest {
   }
 
   @Test(expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "The source position \\+ length must me smaller then the source byte array's length.")
-  public void using_negative_length_throws_IllegalArgumentException() throws Exception {
+      expectedExceptionsMessageRegExp = "Brotli: input array position and length must be greater than zero.")
+  public void using_negative_length_on_input_throws_IllegalArgumentException() throws Exception {
 
     compressor.compress(A_BYTES, 0, -1, true);
 
