@@ -28,7 +28,7 @@ public final class BrotliDeCompressor {
     if (inPosition + inLength > in.length) {
       throw new IllegalArgumentException("The source position and length must me smaller then the source byte array's length.");
     }
-    return assertBrotliOk(deCompressBytes(in, inPosition, inLength, out, out.length));
+    return assertBrotliOk(deCompressBytes(in, inPosition, inLength, out, 0, out.length));
   }
 
   /**
@@ -57,21 +57,16 @@ public final class BrotliDeCompressor {
     if (in.isDirect() && out.isDirect()) {
       outLength = assertBrotliOk(deCompressByteBuffer(in, inPosition, inRemain, out, outPosition, outRemain));
     } else if (in.hasArray() && out.hasArray()) {
-//      outLength = assertBrotliOk(deCompressBytes(in.array(), pos + in.arrayOffset(), rem, out.array()));
-//      out.limit(pos + outLength);
-      throw new UnsupportedOperationException("Not yet implemented");
+      outLength = assertBrotliOk(deCompressBytes(in.array(), inPosition + in.arrayOffset(), inRemain, out.array(), outPosition + out.arrayOffset(), outRemain));
     } else {
-//      byte[] b = new byte[rem];
-//      in.get(b);
-//      outLength = assertBrotliOk(deCompressBytes(b, 0, b.length, out.array()));
-      throw new UnsupportedOperationException("Not yet implemented");
+      throw new UnsupportedOperationException("Not supported ByteBuffer implementation. Both (input and output) buffer has to be of the same type. Use either direct BB or wrapped byte arrays. You may raise an issue on Github too ;-)");
     }
     in.position(inLimit);
     out.limit(outPosition + outLength);
     return outLength;
   }
 
-  private native static int deCompressBytes(byte[] in, int inPosition, int inLength, byte[] out, int outLength);
+  private native static int deCompressBytes(byte[] in, int inPosition, int inLength, byte[] out, int outPosition, int outLength);
 
   private native static int deCompressByteBuffer(ByteBuffer inBuf, int inPosition, int inLength, ByteBuffer outBuf, int outPosition, int outLength);
 

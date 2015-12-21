@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     de_bitkings_jbrotli_BrotliDeCompressor
  * Method:    deCompressBytes
- * Signature: ([BII[BI)I
+ * Signature: ([BII[BII)I
  */
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressBytes
-  (JNIEnv *, jclass, jbyteArray, jint, jint, jbyteArray, jint);
+  (JNIEnv *, jclass, jbyteArray, jint, jint, jbyteArray, jint, jint);
 
 /*
  * Class:     de_bitkings_jbrotli_BrotliDeCompressor

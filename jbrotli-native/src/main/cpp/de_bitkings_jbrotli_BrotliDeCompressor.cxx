@@ -47,7 +47,7 @@ extern "C" {
 /*
  * Class:     de_bitkings_jbrotli_BrotliDeCompressor
  * Method:    deCompressBytes
- * Signature: ([BII[BI)I
+ * Signature: ([BII[BII)I
  */
 JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressBytes(JNIEnv *env,
                                                                                    jclass thisObj,
@@ -55,10 +55,15 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
                                                                                    jint inPosition,
                                                                                    jint inLength,
                                                                                    jbyteArray outByteArray,
+                                                                                   jint outPosition,
                                                                                    jint outLength) {
 
   if (inPosition < 0 || inLength < 0) {
     env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: input array position and length must be greater than zero.");
+    return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
+  }
+  if (outPosition < 0 || outLength < 0) {
+    env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Brotli: output array position and length must be greater than zero.");
     return de_bitkings_jbrotli_BrotliError_NATIVE_ERROR;
   }
 
@@ -70,7 +75,7 @@ JNIEXPORT jint JNICALL Java_de_bitkings_jbrotli_BrotliDeCompressor_deCompressByt
   if (outBuffer == NULL || env->ExceptionCheck()) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_GetPrimitiveArrayCritical_OUTBUF;
 
   size_t computedOutLength = outLength;
-  BrotliResult brotliResult = BrotliDecompressBuffer(inLength, encodedBuffer + inPosition, &computedOutLength, outBuffer);
+  BrotliResult brotliResult = BrotliDecompressBuffer(inLength, encodedBuffer + inPosition, &computedOutLength, outBuffer + outPosition);
 
   if (brotliResult == BROTLI_RESULT_ERROR) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_BROTLI_RESULT_ERROR;
   if (brotliResult == BROTLI_RESULT_NEEDS_MORE_INPUT) return de_bitkings_jbrotli_BrotliError_DECOMPRESS_BROTLI_RESULT_NEEDS_MORE_INPUT;

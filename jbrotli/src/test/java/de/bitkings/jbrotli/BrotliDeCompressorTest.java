@@ -72,8 +72,11 @@ public class BrotliDeCompressorTest {
     // expect exception
   }
 
+  //
+  // *** Direct ByteBuffer ********
+
   @Test
-  public void decompress_with_ByteBuffer() throws Exception {
+  public void decompress_with_direct_ByteBuffer() throws Exception {
 
     ByteBuffer inBuf = ByteBuffer.allocateDirect(A_BYTES_COMPRESSED.length);
     inBuf.put(A_BYTES_COMPRESSED);
@@ -93,7 +96,7 @@ public class BrotliDeCompressorTest {
   }
 
   @Test
-  public void decompress_with_ByteBuffer_using_position_and_length_on_input() throws Exception {
+  public void decompress_with_direct_ByteBuffer_using_position_and_length_on_input() throws Exception {
     // setup
     ByteBuffer inBuffer = ByteBuffer.allocateDirect(100);
     ByteBuffer outBuffer = ByteBuffer.allocateDirect(100);
@@ -121,7 +124,7 @@ public class BrotliDeCompressorTest {
   }
 
   @Test
-  public void decompress_with_ByteBuffer_using_position_and_length_on_output() throws Exception {
+  public void decompress_with_direct_ByteBuffer_using_position_and_length_on_output() throws Exception {
     // setup
     ByteBuffer inBuffer = ByteBuffer.allocateDirect(100);
     ByteBuffer outBuffer = ByteBuffer.allocateDirect(100);
@@ -141,6 +144,139 @@ public class BrotliDeCompressorTest {
     assertThat(outLen).isEqualTo(A_BYTES.length);
     assertThat(outBuffer.position()).isEqualTo(testPosition);
     assertThat(outBuffer.limit()).isEqualTo(testPosition + outLen);
+    assertThat(inBuffer.position()).isEqualTo(A_BYTES_COMPRESSED.length);
+    // then
+    byte[] buf = new byte[A_BYTES.length];
+    outBuffer.get(buf);
+    assertThat(buf).startsWith(A_BYTES);
+  }
+
+  //
+  // *** byte[] wrapped ByteBuffer ********
+
+  @Test
+  public void decompress_with_byte_array_wrapped_ByteBuffer() throws Exception {
+
+    ByteBuffer inBuf = ByteBuffer.wrap(A_BYTES_COMPRESSED);
+
+    ByteBuffer outBuf = ByteBuffer.allocate(100);
+
+    // when
+    int outLen = decompressor.deCompress(inBuf, outBuf);
+
+    // then
+    assertThat(outLen).isEqualTo(A_BYTES.length);
+    // then
+    byte[] out = new byte[A_BYTES.length];
+    outBuf.get(out);
+    assertThat(out).isEqualTo(A_BYTES);
+  }
+
+  @Test
+  public void decompress_with_byte_array_wrapped_ByteBuffer_using_position_and_length_on_input() throws Exception {
+    // setup
+    ByteBuffer inBuffer = ByteBuffer.wrap(createFilledByteArray(100, 'x'));
+    ByteBuffer outBuffer = ByteBuffer.allocate(100);
+
+    // given
+    int testPosition = 23;
+    inBuffer.position(testPosition);
+    inBuffer.put(A_BYTES_COMPRESSED);
+    inBuffer.position(testPosition);
+    inBuffer.limit(testPosition + A_BYTES_COMPRESSED.length);
+
+    // when
+    int outLen = decompressor.deCompress(inBuffer, outBuffer);
+
+    // then
+    assertThat(outLen).isEqualTo(A_BYTES.length);
+    assertThat(outBuffer.position()).isEqualTo(0);
+    assertThat(outBuffer.limit()).isEqualTo(outLen);
+    assertThat(inBuffer.position()).isEqualTo(testPosition + A_BYTES_COMPRESSED.length);
+    // then
+    byte[] buf = new byte[A_BYTES.length];
+    outBuffer.get(buf);
+    assertThat(buf).startsWith(A_BYTES);
+  }
+
+  @Test
+  public void decompress_with_byte_array_wrapped_ByteBuffer_using_position_and_length_on_output() throws Exception {
+    // setup
+    ByteBuffer inBuffer = ByteBuffer.allocate(100);
+    ByteBuffer outBuffer = ByteBuffer.allocate(100);
+    inBuffer.put(A_BYTES_COMPRESSED);
+    inBuffer.limit(A_BYTES_COMPRESSED.length);
+    inBuffer.position(0);
+
+    // given
+    int testPosition = 23;
+    outBuffer.position(testPosition);
+    outBuffer.limit(testPosition + A_BYTES.length);
+
+    // when
+    int outLen = decompressor.deCompress(inBuffer, outBuffer);
+
+    // then
+    assertThat(outLen).isEqualTo(A_BYTES.length);
+    assertThat(outBuffer.position()).isEqualTo(testPosition);
+    assertThat(outBuffer.limit()).isEqualTo(testPosition + outLen);
+    assertThat(inBuffer.position()).isEqualTo(A_BYTES_COMPRESSED.length);
+    // then
+    byte[] buf = new byte[A_BYTES.length];
+    outBuffer.get(buf);
+    assertThat(buf).startsWith(A_BYTES);
+  }
+
+  @Test
+  public void decompress_with_byte_array_wrapped_ByteBuffer_using_arrayOffset_and_length_on_input() throws Exception {
+    // setup
+    ByteBuffer inBuffer = ByteBuffer.wrap(createFilledByteArray(100, 'x'));
+    ByteBuffer outBuffer = ByteBuffer.allocate(100);
+
+    // given
+    int testPosition = 23;
+    inBuffer.position(testPosition);
+    inBuffer.put(A_BYTES_COMPRESSED);
+    inBuffer.position(testPosition);
+    inBuffer = inBuffer.slice();
+    inBuffer.limit(A_BYTES_COMPRESSED.length);
+
+    // when
+    int outLen = decompressor.deCompress(inBuffer, outBuffer);
+
+    // then
+    assertThat(outLen).isEqualTo(A_BYTES.length);
+    assertThat(outBuffer.position()).isEqualTo(0);
+    assertThat(outBuffer.limit()).isEqualTo(outLen);
+    assertThat(inBuffer.position()).isEqualTo(A_BYTES_COMPRESSED.length);
+    // then
+    byte[] buf = new byte[A_BYTES.length];
+    outBuffer.get(buf);
+    assertThat(buf).startsWith(A_BYTES);
+  }
+
+  @Test
+  public void decompress_with_byte_array_wrapped_ByteBuffer_using_arrayOffset_and_length_on_output() throws Exception {
+    // setup
+    ByteBuffer inBuffer = ByteBuffer.allocate(100);
+    ByteBuffer outBuffer = ByteBuffer.allocate(100);
+    inBuffer.put(A_BYTES_COMPRESSED);
+    inBuffer.limit(A_BYTES_COMPRESSED.length);
+    inBuffer.position(0);
+
+    // given
+    int testPosition = 23;
+    outBuffer.position(testPosition);
+    outBuffer = outBuffer.slice();
+    outBuffer.limit(A_BYTES.length);
+
+    // when
+    int outLen = decompressor.deCompress(inBuffer, outBuffer);
+
+    // then
+    assertThat(outLen).isEqualTo(A_BYTES.length);
+    assertThat(outBuffer.position()).isEqualTo(0);
+    assertThat(outBuffer.limit()).isEqualTo(outLen);
     assertThat(inBuffer.position()).isEqualTo(A_BYTES_COMPRESSED.length);
     // then
     byte[] buf = new byte[A_BYTES.length];
